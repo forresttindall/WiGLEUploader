@@ -39,37 +39,8 @@ Use WigleUploader directly from your browser without installation! The web appli
 
 ## 📸 Screenshots
 
-![WigleUploader Screenshot](public/screenshot.png)
+![WigleUploader Screenshot](public/socialshare.jpg)
 
-## 🛠️ Local Development
-
-If you want to run the project locally or contribute to its development:
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/wigleuploader.git
-   cd wigleuploader
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Start the development server:
-   ```bash
-   npm start
-   ```
-
-4. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-## 🔧 Building for Production
-
-```bash
-npm run build
-```
-
-This builds the app for production to the `build` folder, optimizing the build for the best performance.
 
 ## 🌐 API Integration
 
@@ -98,16 +69,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📬 Contact
 
-- Website: [https://wigleuploader.net](https://wigleuploader.net)
-- Project Repository: [https://github.com/yourusername/wigleuploader](https://github.com/yourusername/wigleuploader)
-- Email: [contact@wigleuploader.net](mailto:contact@wigleuploader.net)
+- Website: [https://4est.io](https://4est.io)
+- Project Repository: [https://github.com/forresttindall/WiGLEUploader](https://github.com/forresttindall/WiGLEUploader)
+- Email: [contact@4est.io](mailto:forrest.tindall@gmail.com)
 
 ## 🔮 Future Plans
-
-- [ ] Add visualization of uploaded data
-- [ ] Implement offline mode for uploading later
-- [ ] Add user statistics dashboard
-- [ ] Support for more file formats
+    
+- [ ] Add user statistics badge generator
 - [ ] Batch conversion between formats
 
 ---

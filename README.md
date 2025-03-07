@@ -1,70 +1,115 @@
-# Getting Started with Create React App
+# WigleUploader
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![WigleUploader Logo](public/logo192.png)
 
-## Available Scripts
+A sleek, modern dark-mode web application for uploading wardriving files to the WiGLE database.
 
-In the project directory, you can run:
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![React](https://img.shields.io/badge/React-18.x-blue)](https://reactjs.org/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fwigleuploader.net)](https://wigleuploader.net)
 
-### `npm start`
+## 🌐 Live Website
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**[https://wigleuploader.net](https://wigleuploader.net)**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Use WigleUploader directly from your browser without installation! The web application is hosted at [wigleuploader.net](https://wigleuploader.net) and is free to use for the wardriving community.
 
-### `npm test`
+## 🚀 Features
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Drag & Drop Interface**: Easily upload files with a modern drag and drop interface
+- **Batch Uploads**: Upload multiple wardriving files simultaneously
+- **Format Support**: Compatible with all major wardriving file formats:
+  - DStumbler
+  - G-Mon
+  - inSSIDer
+  - Kismac
+  - Kismet
+  - MacStumbler
+  - NetStumbler
+  - Pocket Warrior
+  - Wardrive-Android
+  - WiFiFoFum
+  - WiFi-Where
+  - WiGLE WiFi Wardriving
+  - Apple consolidated DB
+- **Secure Authentication**: Simple and secure WiGLE account authentication
+- **Retro-Modern UI**: Sleek dark mode interface with a retro computer aesthetic
+- **Responsive Design**: Works on desktop and mobile devices
 
-### `npm run build`
+## 📸 Screenshots
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+![WigleUploader Screenshot](public/screenshot.png)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🛠️ Local Development
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+If you want to run the project locally or contribute to its development:
 
-### `npm run eject`
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/wigleuploader.git
+   cd wigleuploader
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Start the development server:
+   ```bash
+   npm start
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+4. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🔧 Building for Production
 
-## Learn More
+```bash
+npm run build
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+This builds the app for production to the `build` folder, optimizing the build for the best performance.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🌐 API Integration
 
-### Code Splitting
+WigleUploader integrates with the WiGLE API to upload wardriving files. You'll need a WiGLE account to use this application. [Register at WiGLE.net](https://wigle.net/register) if you don't have an account.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🤝 Contributing
 
-### Analyzing the Bundle Size
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-### Making a Progressive Web App
+## 📝 License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-### Advanced Configuration
+## 🙏 Acknowledgements
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- [WiGLE](https://wigle.net) for providing the API and database for wireless network mapping
+- [React](https://reactjs.org/) for the UI library
+- [react-dropzone](https://react-dropzone.js.org/) for the file upload functionality
+- [Geist Mono](https://vercel.com/font) for the beautiful monospace font
 
-### Deployment
+## 📬 Contact
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- Website: [https://wigleuploader.net](https://wigleuploader.net)
+- Project Repository: [https://github.com/yourusername/wigleuploader](https://github.com/yourusername/wigleuploader)
+- Email: [contact@wigleuploader.net](mailto:contact@wigleuploader.net)
 
-### `npm run build` fails to minify
+## 🔮 Future Plans
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- [ ] Add visualization of uploaded data
+- [ ] Implement offline mode for uploading later
+- [ ] Add user statistics dashboard
+- [ ] Support for more file formats
+- [ ] Batch conversion between formats
+
+---
+
+<p align="center">Made with ❤️ for the wardriving community</p>

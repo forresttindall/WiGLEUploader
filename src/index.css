@@ -1,0 +1,16 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: #121212;
+  color: #e0e0e0;
+  font-family: 'Geist Mono', 'Space Mono', monospace;
+}
+
+code {
+  font-family: 'Geist Mono', 'Space Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}

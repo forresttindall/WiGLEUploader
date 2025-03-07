@@ -1,0 +1,710 @@
+WiGLE API
+
+ 3.1 
+
+/swagger.json
+
+
+
+
+
+Welcome to the long-awaited WiGLE API. You can check out our interactive documentation to get started.
+
+By popular demand, we've released a JSON-based, RPC-style (not REST and that's ok) API that allows users to access WiGLE data for their own projects. As with everything, please remember that your interactions with the site and use of data are still bound by the WiGLE End User License Agreement. If you plan to use WiGLE data for commercial gain, you are required to agree to an additional commercial license and we'll issue special unthrottled access tokens based on your use case and price. To learn about commercial options, contact us via email at WiGLE-admin@wigle.net. The commercial API functions in the same manner as the published API, so only access token changes will be required to use existing libraries and integrations for commercial access.
+
+Currently, there are two supported means accessing the data:
+Via the Website
+
+Your login session to WiGLE gives you access to the API via the swagger interface above, provided you're logged into WiGLE when you visit the page. Note that if you want to test our your API credentials, it's useful to log out first, or to open swagger in a private browsing/incognito window in order to avoid confusion.
+Via the API
+
+By visiting your account page, you can get the necessary authentication information to access with API without cookies. The API Name and API Token can be used as the username and password in Basic authenticationsection in the swagger interface. Just click the Authorize button at the top of the page, enter the credentials, and click the Authorize button.
+
+
+
+
+Search, upload, and integrate statistics from WiGLE. Use API Name+Token from https://wigle.net/account
+arkasha, bobzilla and uhtu - Website
+Send email to arkasha, bobzilla and uhtu
+Interaction with the system is governed by our EULA.
+Schemes
+Bluetooth search and information tools
+GET
+​/api​/v2​/bluetooth​/detail
+Get details and observation records for a single network.
+GET
+​/api​/v2​/bluetooth​/search
+Search the WiGLE Bluetooth database.
+Cell search and information tools
+GET
+​/api​/v2​/cell​/mccMnc
+Get MCC and MNC codes for Cellular networks
+GET
+​/api​/v2​/cell​/search
+Search the WiGLE Cell database.
+Network observation file upload and status.
+GET
+​/api​/v2​/file​/kml​/{transid}
+Download a KML summary of a file
+GET
+​/api​/v2​/file​/transactions
+Get the status of files uploaded by the current user
+POST
+​/api​/v2​/file​/upload
+Upload a file
+Network search and information tools
+POST
+​/api​/v2​/network​/comment
+Add a comment to a network
+GET
+​/api​/v2​/network​/detail
+Get details and observation records for a single wifi or cell network
+GET
+​/api​/v2​/network​/geocode
+Get coordinates for an address for use in searching
+GET
+​/api​/v2​/network​/search
+Search the WiGLE Wifi database.
+Statistics and information
+GET
+​/api​/v2​/stats​/countries
+Get statistics organized by country
+GET
+​/api​/v2​/stats​/general
+Get a named map of general upload statistics
+GET
+​/api​/v2​/stats​/group
+Get group standings
+GET
+​/api​/v2​/stats​/regions
+Get statistics for a specified country, organized by region, postal code, and encryption
+GET
+​/api​/v2​/stats​/site
+Get a named map of site-level statistics
+GET
+​/api​/v2​/stats​/standings
+Get user standings
+GET
+​/api​/v2​/stats​/user
+Get user statistics
+Stats group management
+GET
+​/api​/v2​/group​/admin
+Get group info as a stats group administrator
+GET
+​/api​/v2​/group​/groupEventStats​/{groupId}
+Get group member stats for a time-bounded event
+GET
+​/api​/v2​/group​/groupForUser​/{userName}
+Get group (if present) for a user
+GET
+​/api​/v2​/group​/groupMembers
+Get group members
+User profile operations
+GET
+​/api​/v2​/profile​/apiToken
+Get all authorization tokens for the logged-in user
+GET
+​/api​/v2​/profile​/user
+Get the user object for the current logged-in user
+v3 ALPHA
+GET
+​/api​/v3​/cellChannel​/{type}
+Request list of channels for GSM, LTE, WCDMA, or 5G NR transmitters in specified region
+GET
+​/api​/v3​/detail​/bt​/{btNetworkId}
+Request detail for a bluetooth network
+GET
+​/api​/v3​/detail​/cell​/{type}​/{operator}​/{lac}​/{cid}
+Request detail for a GSM, LTE, WCDMA, or 5G NR network
+GET
+​/api​/v3​/detail​/cell​/CDMA​/{sid}​/{nid}​/{bsid}
+Request detail for a CDMA network
+GET
+​/api​/v3​/detail​/wifi​/{wifiNetworkId}
+Request detail for a WiFi network
+Models
+NetSearchResponse{
+success	boolean
+totalResults	integer($int64)
+first	integer($int64)
+last	integer($int64)
+resultCount	integer($int64)
+results	[...]
+searchAfter	string
+
+Use this in future searches to get the next page of data
+search_after	integer($int64)
+
+deprecated
+}
+WiFiNetwork{
+trilat	number
+trilong	number
+ssid	string
+qos	integer($int32)
+transid	string
+firsttime	string($date-time)
+lasttime	string($date-time)
+lastupdt	string($date-time)
+netid	string
+name	string
+type	string
+comment	string
+wep	string
+bcninterval	integer($int32)
+freenet	string
+dhcp	string
+paynet	string
+userfound	boolean
+channel	integer($int32)
+frequency	integer($int32)
+rcois	string
+encryption	string
+country	string
+region	string
+road	string
+city	string
+housenumber	string
+postalcode	string
+}
+BluetoothNetwork{
+trilat	number
+trilong	number
+ssid	string
+qos	integer($int32)
+transid	string
+firsttime	string($date-time)
+lasttime	string($date-time)
+lastupdt	string($date-time)
+netid	string
+type	string
+capabilities	[...]
+userfound	boolean
+device	integer($int32)
+mfgrId	integer($int64)
+name	string
+country	string
+region	string
+road	string
+city	string
+housenumber	string
+postalcode	string
+}
+BluetoothSearchResponse{
+success	boolean
+totalResults	integer($int64)
+first	integer($int64)
+last	integer($int64)
+resultCount	integer($int64)
+results	[...]
+searchAfter	string
+
+Use this in future searches to get the next page of data
+search_after	integer($int64)
+
+deprecated
+}
+CellSiteChannel{
+channel	integer($int64)
+latitude	number
+longitude	number
+qos	integer($int32)
+}
+ChannelDetailResponse{
+success	boolean
+resultsExceedLimit	boolean
+results	[...]
+resultType	string
+}
+MccMncRecord{
+type	string
+countryName	string
+countryCode	string
+mcc	string
+mnc	string
+brand	string
+operator	string
+status	string
+bands	string
+notes	string
+}
+CellSearchResponse{
+success	boolean
+totalResults	integer($int64)
+first	integer($int64)
+last	integer($int64)
+resultCount	integer($int64)
+results	[...]
+searchAfter	string
+
+Use this in future searches to get the next page of data
+search_after	integer($int64)
+
+deprecated
+}
+GenericNetwork{
+trilat	number
+trilong	number
+ssid	string
+qos	integer($int32)
+transid	string
+firsttime	string($date-time)
+lasttime	string($date-time)
+lastupdt	string($date-time)
+id	string
+attributes	string
+channel	integer($int32)
+gentype	string
+country	string
+region	string
+road	string
+city	string
+housenumber	string
+postalcode	string
+}
+BluetoothLocation{
+alt	integer($int32)
+accuracy	number($float)
+lastupdt	string($date-time)
+latitude	number
+longitude	number
+month	string
+ssid	string
+time	string($date-time)
+signal	number($float)
+netId	string
+type	string
+attributes	string
+}
+BtDetail{
+trilateratedLatitude	number
+readOnly: true
+trilateratedLongitude	number
+readOnly: true
+bestClusterWiGLEQoS	integer($int32)
+readOnly: true
+firstSeen	string($date-time)
+readOnly: true
+lastSeen	string($date-time)
+readOnly: true
+lastUpdate	string($date-time)
+readOnly: true
+streetAddress	StreetAddress{...}
+networkId*	string
+readOnly: true
+name	string
+readOnly: true
+type	string
+readOnly: true
+capabilities	[...]
+deviceType	integer($int32)
+readOnly: true
+locationClusters	[...]
+}
+BtLocationCluster{
+centroidLatitude	number($double)
+centroidLongitude	number($double)
+minLastUpdate	string($date-time)
+maxLastUpdate	string($date-time)
+clusterSsid	string
+locations	[...]
+score	integer($int32)
+daysObservedCount	integer($int32)
+}
+StreetAddress{
+housenumber	string
+road	string
+city	string
+region	string
+country	string
+postalcode	string
+}
+WiFiDetail{
+trilateratedLatitude	number
+readOnly: true
+trilateratedLongitude	number
+readOnly: true
+bestClusterWiGLEQoS	integer($int32)
+readOnly: true
+firstSeen	string($date-time)
+readOnly: true
+lastSeen	string($date-time)
+readOnly: true
+lastUpdate	string($date-time)
+readOnly: true
+streetAddress	StreetAddress{...}
+networkId*	string
+readOnly: true
+name	string
+readOnly: true
+type	string
+readOnly: true
+comment	string
+readOnly: true
+bcninterval	integer($int32)
+readOnly: true
+freenet	string
+readOnly: true
+dhcp	string
+readOnly: true
+paynet	string
+readOnly: true
+encryption	string
+readOnly: true
+channel	integer($int32)
+readOnly: true
+locationClusters	[...]
+}
+WiFiLocation{
+alt	integer($int32)
+accuracy	number($float)
+lastupdt	string($date-time)
+latitude	number
+longitude	number
+month	string
+ssid	string
+time	string($date-time)
+signal	number($float)
+name	string
+netId	string
+noise	number($float)
+snr	number($float)
+wep	string
+channel	integer($int32)
+frequency	integer($int32)
+encryptionValue	string
+}
+WiFiLocationCluster{
+centroidLatitude	number($double)
+centroidLongitude	number($double)
+minLastUpdate	string($date-time)
+maxLastUpdate	string($date-time)
+clusterSsid	string
+locations	[...]
+score	integer($int32)
+daysObservedCount	integer($int32)
+}
+CellDetail{
+trilateratedLatitude	number
+readOnly: true
+trilateratedLongitude	number
+readOnly: true
+bestClusterWiGLEQoS	integer($int32)
+readOnly: true
+firstSeen	string($date-time)
+readOnly: true
+lastSeen	string($date-time)
+readOnly: true
+lastUpdate	string($date-time)
+readOnly: true
+streetAddress	StreetAddress{...}
+networkId*	string
+readOnly: true
+type	string
+readOnly: true
+attributes	[...]
+channel	integer($int32)
+readOnly: true
+locationClusters	[...]
+xarfcn	integer($int32)
+readOnly: true
+}
+CellLocationCluster{
+centroidLatitude	number($double)
+centroidLongitude	number($double)
+minLastUpdate	string($date-time)
+maxLastUpdate	string($date-time)
+clusterSsid	string
+locations	[...]
+score	integer($int32)
+daysObservedCount	integer($int32)
+}
+GenericLocation{
+alt	integer($int32)
+accuracy	number($float)
+lastupdt	string($date-time)
+latitude	number
+longitude	number
+month	string
+ssid	string
+time	string($date-time)
+signal	number($float)
+netId	string
+genType	string
+attributes	string
+channel	integer($int32)
+}
+Group{
+groupId	string
+groupName	string
+owner	string
+discovered	integer($int64)
+total	integer($int64)
+genDisc	integer($int64)
+authType	string
+groupOwner	boolean
+}
+GroupMember{
+groupId	string
+username	string
+status	string
+discovered	integer($int64)
+total	integer($int64)
+genDisc	integer($int64)
+firstTransid	string
+lastTransid	string
+monthCount	integer($int64)
+prevMonthCount	integer($int64)
+}
+GroupResponse{
+success	boolean
+groupid	string
+group	Group{...}
+users	[...]
+}
+GroupMemberResponse{
+success	boolean
+users	[...]
+group	Group{...}
+}
+GroupMemberEventStats{
+userName	string
+wifiDiscoveredWithLocation	integer($int64)
+wifiDiscovered	integer($int64)
+cellDiscoveredWithLocation	integer($int64)
+cellDiscovered	integer($int64)
+btDiscoveredWithLocation	integer($int64)
+btDiscovered	integer($int64)
+}
+GroupStatsResponse{
+overAllGroupStats	[...]
+startDateTime	string($date-time)
+endDateTime	string($date-time)
+eventMemberStats	[...]
+}
+GeocodingResponse{
+address	{...}
+lat	number
+lon	number
+importance	number
+place_id	integer($int64)
+licence	string
+osm_type	string
+display_name	string
+boundingbox	[...]
+}
+WiFiNetworkDetailResponse{
+success	boolean
+cdma	boolean
+gsm	boolean
+lte	boolean
+nr	boolean
+wcdma	boolean
+wifi	boolean
+addresses	[...]
+results	[...]
+}
+WiFiNetworkWithLocation{
+trilat	number
+trilong	number
+ssid	string
+qos	integer($int32)
+transid	string
+firsttime	string($date-time)
+lasttime	string($date-time)
+lastupdt	string($date-time)
+netid	string
+name	string
+type	string
+comment	string
+wep	string
+bcninterval	integer($int32)
+freenet	string
+dhcp	string
+paynet	string
+userfound	boolean
+channel	integer($int32)
+frequency	integer($int32)
+rcois	string
+locationData	[...]
+encryption	string
+country	string
+region	string
+road	string
+city	string
+housenumber	string
+postalcode	string
+}
+NetworkGeocodingResponse{
+success	boolean
+results	[...]
+}
+NetCommentResponse{
+success	boolean
+comment	string
+netid	string
+}
+Person{
+userid	string
+email	string
+donate	string
+joindate	string($date-time)
+lastlogin	string($date-time)
+flags	integer($int64)
+emailVerified	boolean
+nextlogin	string($date-time)
+session	string
+admin	boolean
+success	string
+}
+AuthToken{
+authName	string
+token	string
+status	stringEnum:
+Array [ 2 ]
+type	stringEnum:
+Array [ 5 ]
+personId	integer($int64)
+}
+ResettableAuthTokenResponse{
+success	boolean
+result	[...]
+digest	string
+id	integer($int32)
+}
+GroupStat{
+groupId	string
+groupName	string
+owner	string
+discovered	integer($int64)
+total	integer($int64)
+genDisc	integer($int64)
+members	integer($int64)
+joined	boolean
+groupOwner	boolean
+}
+GroupStatResponse{
+success	boolean
+groups	[...]
+}
+CountriesResponse{
+success	boolean
+countries	[...]
+}
+CountryStat{
+country	string
+wifiCount	integer($int64)
+cellCount	integer($int64)
+btCount	integer($int64)
+}
+EncryptionStat{
+wep	string
+count	integer($int64)
+}
+PostalStat{
+postalCode	string
+wifiCount	integer($int64)
+cellCount	integer($int64)
+btCount	integer($int64)
+}
+RegionResponse{
+success	boolean
+regions	[...]
+postalCode	[...]
+encryption	[...]
+}
+RegionStat{
+region	string
+wifiCount	integer($int64)
+cellCount	integer($int64)
+btCount	integer($int64)
+}
+UserStandings{
+rank	integer($int64)
+monthRank	integer($int64)
+userName	string
+discoveredWiFiGPS	integer($int64)
+discoveredWiFiGPSPercent	number($float)
+discoveredWiFi	integer($int64)
+discoveredCellGPS	integer($int64)
+discoveredCell	integer($int64)
+discoveredBtGPS	integer($int64)
+discoveredBt	integer($int64)
+eventMonthCount	integer($int64)
+eventPrevMonthCount	integer($int64)
+prevRank	integer($int64)
+prevMonthRank	integer($int64)
+totalWiFiLocations	integer($int64)
+first	string
+last	string
+self	boolean
+}
+UserStatsResponse{
+success	boolean
+imageBadgeUrl	string
+statistics	UserStandings{...}
+rank	integer($int64)
+monthRank	integer($int64)
+user	string
+}
+TransidResponse{
+file	string
+size	integer($int64)
+transId	string
+}
+UploadResponse{
+success	boolean
+warning	string
+results	UploadResultsResponse{...}
+observer	string
+}
+UploadResultsResponse{
+timeTaken	string
+filesize	integer($int64)
+filename	string
+transids	[...]
+}
+ErrorMessageResponse{
+success	boolean
+message	string
+}
+TransLog{
+transid	string
+username	string
+firstTime	string($date-time)
+lastupdt	string($date-time)
+fileName	string
+fileSize	integer($int64)
+fileLines	integer($int64)
+status	string
+discoveredGps	integer($int64)
+discovered	integer($int64)
+total	integer($int64)
+totalGps	integer($int64)
+totalLocations	integer($int64)
+percentDone	number($float)
+timeParsing	integer($int64)
+genDiscovered	integer($int64)
+genDiscoveredGps	integer($int64)
+genTotal	integer($int64)
+genTotalGps	integer($int64)
+genTotalLocations	integer($int64)
+btDiscovered	integer($int64)
+btDiscoveredGps	integer($int64)
+btTotal	integer($int64)
+btTotalGps	integer($int64)
+btTotalLocations	integer($int64)
+wwwdStatus	string
+wait	integer($int64)
+brand	string
+model	string
+osRelease	string
+}
+TranslogResponse{
+success	boolean
+results	[...]
+processingQueueDepth	integer($int64)
+geoQueueDepth	integer($int64)
+trilaterationQueueDepth	integer($int64)
+}

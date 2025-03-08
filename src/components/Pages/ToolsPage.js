@@ -155,10 +155,11 @@ function ToolsPage() {
       // Style the clone for optimal capture
       clone.style.position = 'absolute';
       clone.style.left = '-9999px';
-      clone.style.width = '925px';
+      clone.style.width = '900px';
       clone.style.maxWidth = 'none';
-      clone.style.padding = '40px';
+      clone.style.padding = '0px';
       clone.style.paddingTop = '0px';
+      clone.style.paddingBottom = '40px';
       clone.style.marginTop = '0px';
       clone.style.margin = '0';
       clone.style.boxSizing = 'border-box';

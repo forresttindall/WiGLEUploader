@@ -64,8 +64,7 @@
 .stats-generator {
   background-color: var(--card-bg-color);
   border-radius: var(--border-radius);
-  padding: 0rem;
-  width: 100%;
+  padding: 1.5rem;
   margin-bottom: 2rem;
   box-shadow: var(--card-shadow);
 }
@@ -83,7 +82,6 @@
 .input-group {
   margin-bottom: 1rem;
   width: 100%;
-  position: relative;
 }
 
 .input-group label {
@@ -91,10 +89,6 @@
   margin-bottom: 0.5rem;
   font-weight: 500;
   color: var(--text-color);
-}
-
-.padding {
-  padding: 0 2rem;
 }
 
 .input-group input {
@@ -105,27 +99,30 @@
   background-color: var(--input-bg-color);
   color: var(--text-color);
   font-size: 1rem;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  transition: all 0.3s ease;
   box-sizing: border-box;
   height: 48px;
-  line-height: normal;
 }
 
 .input-group input:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 2px rgba(12, 196, 0, 0.2);
+  cursor: text;
 }
 
 .input-group input:hover {
   border-color: var(--primary-color-hover);
+  cursor: pointer;
 }
 
+/* Add active state styling */
 .input-group input:active {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 2px rgba(12, 196, 0, 0.3);
 }
 
+/* Add focus-within state for the entire input group */
 .input-group:focus-within label {
   color: var(--primary-color);
 }
@@ -137,32 +134,24 @@
   border-radius: var(--border-radius-sm);
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
-  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
-  height: 48px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
 }
 
 .fetch-button:hover, .download-button:hover {
-  background-color: var(--primary-color-hover);
+  background-color: var(--primary-color);
+  box-shadow: 0 0 10px var(--primary-color);
+  filter: brightness(1.1);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.fetch-button:active, .download-button:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 
 .fetch-button:disabled {
   background-color: var(--disabled-color);
   cursor: not-allowed;
-  transform: none;
   box-shadow: none;
+  transform: none;
 }
 
 .error-message {

@@ -6,7 +6,7 @@ function Header() {
       <div className="header-text">
         <h1>WiGLE Uploader</h1>
         <p className="subtitle">Fast Batch Uploads to WiGLE</p>
-        <p className="subtitle">Open Source & Zero-Knowledge Architecture</p>
+        <p className="subtitle">Open Source & Private</p>
       </div>
     </header>
   );

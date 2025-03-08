@@ -10,7 +10,7 @@ function ToolsPage() {
           <h3>WiGLE WiFi Wardriving App</h3>
           <p>The official mobile app for collecting wireless network data.</p>
           <button 
-            className="tool-link"
+            className="tool-download"
             onClick={() => window.open('https://play.google.com/store/apps/details?id=net.wigle.wigleandroid&pli=1', '_blank')}
           >
             Download

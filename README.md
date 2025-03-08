@@ -1,4 +1,4 @@
-# WigleUploader
+# WiGLEUploader
 
 ![WigleUploader Logo](public/logo192.png)
 

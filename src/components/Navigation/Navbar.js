@@ -1,15 +1,16 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWifi } from '@fortawesome/free-solid-svg-icons';
 
 function Navbar({ activePage, setActivePage }) {
   return (
     <nav className="nav-bar">
       <div className="nav-left">
-        <button 
-          className={`nav-button ${activePage === 'home' ? 'active' : ''}`} 
-          onClick={() => setActivePage('home')}
-        >
-          Home
-        </button>
+        <div className="home-link" onClick={() => setActivePage('home')}>
+          <div className="wifi-icon-container">
+            <FontAwesomeIcon icon={faWifi} className="wifi-icon-fa" />
+          </div>
+        </div>
       </div>
       <div className="nav-right">
         <button 

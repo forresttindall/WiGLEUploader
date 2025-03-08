@@ -1,5 +1,7 @@
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 
 // Define accepted file extensions and types
 const ACCEPTED_EXTENSIONS = [
@@ -8,6 +10,7 @@ const ACCEPTED_EXTENSIONS = [
 ];
 
 // Define accepted wardriving formats with their common extensions
+// eslint-disable-next-line no-unused-vars
 const WARDRIVING_FORMATS = {
   'DStumbler': ['.txt', '.log'],
   'G-Mon': ['.txt', '.csv'],
@@ -64,13 +67,16 @@ function FileDropzone({ onDrop, setUploadStatus }) {
   return (
     <div {...getRootProps()} className={`dropzone ${isDragActive ? 'active' : ''}`}>
       <input {...getInputProps()} />
-      {
-        isDragActive ?
-          <p>Drop the files here...</p> :
-          <p>Drag & drop wardriving files here, or click to select files</p>
-      }
-      <div className="accepted-extensions">
-        <p>Accepted file extensions: {ACCEPTED_EXTENSIONS.join(', ')}</p>
+      <div className="dropzone-content">
+        <FontAwesomeIcon icon={faCloudUploadAlt} className="upload-icon" />
+        {
+          isDragActive ?
+            <p>Drop the files here...</p> :
+            <p>Drag & drop wardriving files here, or click to select files</p>
+        }
+        <div className="accepted-extensions">
+          <p>Accepted file extensions: {ACCEPTED_EXTENSIONS.join(', ')}</p>
+        </div>
       </div>
     </div>
   );

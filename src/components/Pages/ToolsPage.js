@@ -9,7 +9,12 @@ function ToolsPage() {
         <li>
           <h3>WiGLE WiFi Wardriving App</h3>
           <p>The official mobile app for collecting wireless network data.</p>
-          <a href="https://play.google.com/store/apps/details?id=net.wigle.wigleandroid&pli=1" target="_blank" rel="noopener noreferrer">Download</a>
+          <button 
+            className="tool-link"
+            onClick={() => window.open('https://play.google.com/store/apps/details?id=net.wigle.wigleandroid&pli=1', '_blank')}
+          >
+            Download
+          </button>
         </li>
         <li>
           <h3>User Data Badge</h3>

@@ -3,10 +3,10 @@ import React from 'react';
 function AboutPage() {
   return (
     <div className="page-content">
-      <h2>About WigleUploader</h2>
-      <p>WigleUploader is an open source tool designed to help you upload your wardriving files faster to the WiGLE database.</p>
+      <h2>About WiGLE Uploader</h2>
+      <p>WiGLE Uploader is an open source tool designed to help you upload your wardriving files faster to the WiGLE database.</p>
       <br></br>
-      <p>WigleUploader features true zero-knowledge architecture and stores no data.</p>
+      <p>WiGLE Uploader features true zero-knowledge architecture and stores no data.</p>
       <br></br>
       <ul>
         <li>Drag and drop file uploads</li>

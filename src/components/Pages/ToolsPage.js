@@ -261,7 +261,7 @@ function ToolsPage() {
             />
           </div>
           <div className="input-group">
-            <label htmlFor="displayName">Display Name (optional)</label>
+            <label htmlFor="displayName">Username</label>
             <input
               type="text"
               id="displayName"

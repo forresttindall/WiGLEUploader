@@ -34,6 +34,7 @@
 
 .tool-download:hover {
   background-color: var(--primary-color-hover);
+  cursor: pointer;
 }
 
 .coming-soon {
@@ -45,6 +46,10 @@
   font-size: 0.9rem;
   text-decoration: none;
   opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.coming-soon:hover {
   cursor: not-allowed;
 }
 
@@ -68,12 +73,14 @@
 
 .input-group {
   margin-bottom: 1rem;
+  width: 100%;
 }
 
 .input-group label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
+  color: var(--text-color);
 }
 
 .input-group input {
@@ -81,31 +88,60 @@
   padding: 0.75rem;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-sm);
-  font-size: 1rem;
   background-color: var(--input-bg-color);
   color: var(--text-color);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(12, 196, 0, 0.2);
+  cursor: text;
+}
+
+.input-group input:hover {
+  border-color: var(--primary-color-hover);
+  cursor: pointer;
+}
+
+/* Add active state styling */
+.input-group input:active {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(12, 196, 0, 0.3);
+}
+
+/* Add focus-within state for the entire input group */
+.input-group:focus-within label {
+  color: var(--primary-color);
 }
 
 .fetch-button, .download-button {
   background-color: var(--primary-color);
-  
   color: var(--button-text-color);
   border: none;
   border-radius: var(--border-radius-sm);
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
   margin-top: 0.5rem;
 }
 
 .fetch-button:hover, .download-button:hover {
-  background-color: var(--primary-color-hover);
+  background-color: var(--primary-color);
+  box-shadow: 0 0 10px var(--primary-color);
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  cursor: pointer;
 }
 
 .fetch-button:disabled {
   background-color: var(--disabled-color);
   cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
 
 .error-message {

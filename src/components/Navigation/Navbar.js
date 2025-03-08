@@ -17,7 +17,7 @@ function Navbar({ activePage, setActivePage }) {
           className={`nav-button ${activePage === 'tools' ? 'active' : ''}`} 
           onClick={() => setActivePage('tools')}
         >
-          Other Tools
+          Badge Generator
         </button>
         <button 
           className={`nav-button ${activePage === 'about' ? 'active' : ''}`} 

@@ -61,6 +61,7 @@ body:before {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+
   align-items: center;
   padding: 2rem;
   box-sizing: border-box;
@@ -69,7 +70,7 @@ body:before {
 
 .container {
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px;
   background-color: var(--card-bg);
   border-radius: var(--border-radius-lg);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
@@ -78,6 +79,13 @@ body:before {
   flex-direction: column;
   margin-bottom: 2rem;
   transition: all 0.3s ease;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.container > *:not(.nav-bar) {
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .App-header {
@@ -427,6 +435,9 @@ footer a:hover {
   padding: 0.75rem 1.5rem;
   background-color: var(--bg-color);
   border-bottom: 1px solid var(--border-color);
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 .nav-left, .nav-right {
@@ -535,8 +546,11 @@ footer a:hover {
 
 /* Page Content Styles */
 .page-content {
-  padding: 2rem;
+  padding: 1rem 0;
   border-bottom: 1px solid var(--border-color);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .page-content h2 {
@@ -955,5 +969,12 @@ footer a:hover {
   border-radius: var(--border-radius-sm);
   max-height: 200px;
   overflow-y: auto;
+}
+
+/* If you have a specific content container class, update that as well */
+.content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 

@@ -1,0 +1,379 @@
+.tools-page {
+  padding: 1rem;
+}
+
+.tools-list {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+}
+
+.tools-list li {
+  background-color: var(--card-bg-color);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--card-shadow);
+}
+
+.tools-list h3 {
+  margin-top: 0;
+  color: var(--primary-color);
+}
+
+.tool-download {
+  background-color: var(--primary-color);
+  color: var(--button-text-color);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tool-download:hover {
+  background-color: var(--primary-color-hover);
+}
+
+.coming-soon {
+  display: inline-block;
+  background-color: var(--secondary-color);
+  color: var(--button-text-color);
+  border-radius: var(--border-radius-sm);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  text-decoration: none;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Stats Generator Styles */
+.stats-generator {
+  background-color: var(--card-bg-color);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--card-shadow);
+}
+
+.credentials-section {
+  margin-bottom: 1.5rem;
+}
+
+.credentials-section h3 {
+  margin-top: 0;
+  color: var(--primary-color);
+}
+
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  font-size: 1rem;
+  background-color: var(--input-bg-color);
+  color: var(--text-color);
+}
+
+.fetch-button, .download-button {
+  background-color: var(--primary-color);
+  
+  color: var(--button-text-color);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 0.5rem;
+}
+
+.fetch-button:hover, .download-button:hover {
+  background-color: var(--primary-color-hover);
+}
+
+.fetch-button:disabled {
+  background-color: var(--disabled-color);
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: var(--error-color);
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background-color: rgba(255, 0, 0, 0.1);
+  border-radius: var(--border-radius-sm);
+}
+
+/* Stats Card Styles */
+.stats-preview {
+  margin-top: 2rem;
+}
+
+.stats-card {
+  background-color: #121212;
+  color: #eee;
+  border-radius: 8px;
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.stats-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.stats-header .home-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem;
+  margin-right: 3rem;
+  cursor: pointer;
+}
+
+.stats-header .wifi-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  filter: none !important;
+  animation: none !important;
+  transition: none !important;
+  padding: 0.5rem;
+}
+
+.stats-header .wifi-icon-fa {
+  font-size: 40px;
+  animation: none !important;
+  filter: none !important;
+}
+
+.stats-header .wigle-text {
+  font-weight: bold;
+  font-size: 18px;
+  color: #fff;
+  margin-top: 8px;
+}
+
+.user-info {
+  width: 100%;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+ 
+}
+
+.user-info h3 {
+  margin: 0 3rem 0 0;
+  font-size: 2rem;
+  color: #fff;
+}
+
+.stats-highlights {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #0CC400;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+/* Activity Calendar Styles */
+.activity-calendar {
+  margin-top: 1rem;
+}
+
+.calendar-container {
+  display: flex;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.day-labels {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: 1.5rem;
+  margin-right: 0.25rem;
+  font-size: 0.6rem;
+  color: #888;
+  height: 84px;
+  position: relative;
+}
+
+.day-label-top {
+  position: absolute;
+  top: 1.5rem;
+}
+
+.day-label-middle:nth-of-type(2) {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.day-label-middle:nth-of-type(3) {
+  position: absolute;
+  top: 75%;
+  transform: translateY(-50%);
+}
+
+.day-label-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.day-labels span {
+  height: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.months-grid {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.month-column {
+  margin-right: 0.25rem;
+}
+
+.month-label {
+  text-align: center;
+  font-size: 0.7rem;
+  color: #888;
+  margin-bottom: 0.25rem;
+}
+
+.weeks-container {
+  display: flex;
+}
+
+.week-row {
+  display: flex;
+  flex-direction: column;
+  margin-right: 1px;
+}
+
+.day-cell {
+  width: 10px;
+  height: 10px;
+  margin: 1px;
+  border-radius: 2px;
+  position: relative;
+}
+
+.day-cell.empty {
+  background-color: #1c1c1c;
+}
+
+.day-cell.intensity-0 {
+  background-color: #1c1c1c;
+}
+
+.day-cell.intensity-1 {
+  background-color: rgba(12, 196, 0, 0.2);
+}
+
+.day-cell.intensity-2 {
+  background-color: rgba(12, 196, 0, 0.4);
+}
+
+.day-cell.intensity-3 {
+  background-color: rgba(12, 196, 0, 0.6);
+}
+
+.day-cell.intensity-4 {
+  background-color: rgba(12, 196, 0, 0.9);
+}
+
+.intensity-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.75rem;
+  font-size: 0.7rem;
+  color: #888;
+}
+
+.legend-cells {
+  display: flex;
+  margin: 0 0.5rem;
+}
+
+.stats-footer {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.download-button {
+  display: block;
+  margin: 1.5rem auto;
+}
+
+@media (max-width: 768px) {
+  .stats-card {
+    padding: 1rem;
+  }
+  
+  .stats-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .stats-header .home-link {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+  
+  .stats-highlights {
+    justify-content: center;
+  }
+  
+  .user-info {
+    flex-direction: column;
+  }
+  
+  .user-info h3 {
+    margin: 0 0 0.75rem 0;
+  }
+}
+
+.stats-header .home-link:hover .wifi-icon-container {
+  filter: none !important;
+  transform: none !important;
+  animation: none !important;
+} 

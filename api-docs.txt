@@ -23,6 +23,18 @@ By visiting your account page, you can get the necessary authentication informat
 
 
 
+API Token
+
+WiGLE provides API-based access to various aspects of our systems via an API. This allows us to provide access to people who want to use the data for commercial purposes and people who want to use the data on a scale that taxes our servers while helping to sustain the project. API for some functions is limited on a daily basis for all users for the time being, but if you'd like increased access, please email us (include your username and usecase) at WiGLE-admin@wigle.net. Documentation is available at api.wigle.net. Please remember that by signing up with WiGLE, you're bound by our End-User License Agreement. If you plan to use WiGLE data for your own profit, you are required to license the data on a commercial basis - you can hear about commercial options by sending us a note at WiGLE-admin@wigle.net.
+
+API access verification is performed using the HTTP "Authorization" header (not an auth_token parameter) and Basic authentication. Using the "User" and "Key" below as username and password in Basic authentication, you will be able to access to the API without session-based authentication. Many libraries support Basic authentication, but you can either use the "Encoded for Use" token directly below, or perform the operation manually by concatenating them as <api user>:<api key> and Base64 encoding the result. The encoded string must be placed in the Authorization HTTP Header in a string reading Basic <encoded string>.
+
+You can test your credentials by placing the API Name and API Token into the username and password inputs (respectively) in the Basic Authentication dialog you can access by clicking the Authorize button in our interactive API documentation. To avoid confusion during testing, we recommend that you log out, or test in a private/incognito window to ensure that you're accessing the system with your token, rather than session-based authentication as a web user. 
+
+
+
+
+
 Search, upload, and integrate statistics from WiGLE. Use API Name+Token from https://wigle.net/account
 arkasha, bobzilla and uhtu - Website
 Send email to arkasha, bobzilla and uhtu

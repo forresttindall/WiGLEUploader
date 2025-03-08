@@ -928,3 +928,32 @@ footer a:hover {
   animation: btn-shine 1.5s infinite;
 }
 
+/* Debug information styling */
+.debug-info {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+}
+
+.debug-info details {
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 0.5rem;
+  border-radius: var(--border-radius-sm);
+}
+
+.debug-info summary {
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.debug-info pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: var(--border-radius-sm);
+  max-height: 200px;
+  overflow-y: auto;
+}
+

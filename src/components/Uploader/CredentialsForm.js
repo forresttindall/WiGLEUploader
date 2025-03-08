@@ -6,12 +6,9 @@ function CredentialsForm({ credentials, handleInputChange }) {
       <h2>WiGLE Authentication</h2>
       <p className="auth-info">
         Enter your WiGLE API credentials to upload files.
-        Don't have an account? <a href="https://wigle.net/register" target="_blank" rel="noopener noreferrer">Register at WiGLE.net</a>
+        Get your API at <a href="https://api.wigle.net/" target="_blank" rel="noopener noreferrer">api.wigle.net</a>
       </p>
-      <p className="auth-info">
-        Find your API Name and API Key in your WiGLE account settings under "API Token".
-      </p>
-      
+      <br></br>
       <div className="input-group">
         <label htmlFor="username">API Name</label>
         <input

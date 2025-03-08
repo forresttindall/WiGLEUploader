@@ -26,7 +26,7 @@ function App() {
 
   // Load saved credentials on initial render
   useEffect(() => {
-    const savedCredentials = localStorage.getItem('wigleCredentials');
+    const savedCredentials = localStorage.getItem('wigleApiCredentials');
     if (savedCredentials) {
       try {
         const parsedCredentials = JSON.parse(savedCredentials);
@@ -36,7 +36,7 @@ function App() {
           rememberMe: true
         });
       } catch (error) {
-        console.error('Error parsing saved credentials:', error);
+        console.error('Error parsing saved API credentials:', error);
       }
     }
   }, []);
@@ -54,16 +54,16 @@ function App() {
     // If unchecked, remove saved credentials
     if (name === 'rememberMe') {
       if (checked) {
-        localStorage.setItem('wigleCredentials', JSON.stringify({
+        localStorage.setItem('wigleApiCredentials', JSON.stringify({
           username: credentials.username,
           password: credentials.password
         }));
       } else {
-        localStorage.removeItem('wigleCredentials');
+        localStorage.removeItem('wigleApiCredentials');
       }
     } else if (credentials.rememberMe) {
       // Update saved credentials when they change and remember me is checked
-      localStorage.setItem('wigleCredentials', JSON.stringify({
+      localStorage.setItem('wigleApiCredentials', JSON.stringify({
         ...credentials,
         [name]: newValue
       }));
@@ -81,7 +81,7 @@ function App() {
     }
 
     if (!credentials.username || !credentials.password) {
-      setUploadStatus({ success: false, message: 'Username and password are required' });
+      setUploadStatus({ success: false, message: 'API Name and API Key are required' });
       return;
     }
 
@@ -95,11 +95,17 @@ function App() {
     });
 
     try {
+      // Create the Basic Authentication token
+      const authToken = btoa(`${credentials.username}:${credentials.password}`);
+      
       // For each file, create a FormData and upload
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const formData = new FormData();
         formData.append('file', file);
+        
+        // Add any additional required parameters for the WiGLE API
+        // formData.append('donate', 'on');  // Example: if you want to donate the file
         
         // Update status to show which file is being uploaded
         setUploadStatus({ 
@@ -110,26 +116,38 @@ function App() {
           totalFiles: files.length
         });
         
-        // Simulate API call with progress updates
-        const totalSteps = 10;
-        for (let step = 0; step <= totalSteps; step++) {
-          await new Promise(resolve => setTimeout(resolve, 100));
-          const fileProgress = (step / totalSteps) * 100;
-          const overallProgress = Math.round(((i + (fileProgress / 100)) / files.length) * 100);
-          setUploadStatus({
-            success: true,
-            message: `Uploading: ${file.name}`,
-            progress: overallProgress,
-            currentFile: i + 1,
-            totalFiles: files.length
-          });
+        // Make the actual API call to WiGLE
+        const response = await fetch('https://api.wigle.net/api/v2/file/upload', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Basic ${authToken}`
+          },
+          body: formData
+        });
+        
+        // Parse the response
+        const responseData = await response.json();
+        
+        // Check for API errors
+        if (!response.ok || responseData.success === false) {
+          const errorMessage = responseData.message || `HTTP error ${response.status}`;
+          throw new Error(errorMessage);
         }
+        
+        // Update progress after successful upload
+        setUploadStatus({
+          success: true,
+          message: `Successfully uploaded: ${file.name}`,
+          progress: Math.round(((i + 1) / files.length) * 100),
+          currentFile: i + 1,
+          totalFiles: files.length
+        });
       }
       
       // Final success message
       setUploadStatus({ 
         success: true, 
-        message: `Successfully uploaded ${files.length} files. Please allow up to 1 hour for the WiGLE servers to process. Check https://wigle.net/stats#processing to see progress.`, 
+        message: `Successfully uploaded ${files.length} files. Please allow up to 20 minutes for the WiGLE servers to process.`, 
         progress: 100,
         currentFile: files.length,
         totalFiles: files.length
@@ -145,11 +163,13 @@ function App() {
     }
   };
 
-  // Render the active page
-  const renderActivePage = () => {
-    switch (activePage) {
-      case 'home':
-        return (
+  return (
+    <div className="App">
+      <div className="container">
+        <Navbar activePage={activePage} setActivePage={setActivePage} />
+        <Header />
+        
+        {activePage === 'home' && (
           <>
             <CredentialsForm 
               credentials={credentials} 
@@ -165,26 +185,12 @@ function App() {
               removeFile={removeFile}
             />
           </>
-        );
-      case 'tools':
-        return <ToolsPage />;
-      case 'about':
-        return <AboutPage />;
-      case 'contact':
-        return <ContactPage />;
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <div className="App">
-      <div className="container">
-        <Navbar activePage={activePage} setActivePage={setActivePage} />
-        <Header />
-        <div className="content-wrapper">
-          {renderActivePage()}
-        </div>
+        )}
+        
+        {activePage === 'about' && <AboutPage />}
+        {activePage === 'tools' && <ToolsPage />}
+        {activePage === 'contact' && <ContactPage />}
+        
         <Footer />
       </div>
     </div>

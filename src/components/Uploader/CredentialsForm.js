@@ -5,31 +5,34 @@ function CredentialsForm({ credentials, handleInputChange }) {
     <div className="credentials-section">
       <h2>WiGLE Authentication</h2>
       <p className="auth-info">
-        Enter your WiGLE account credentials to upload files.
+        Enter your WiGLE API credentials to upload files.
         Don't have an account? <a href="https://wigle.net/register" target="_blank" rel="noopener noreferrer">Register at WiGLE.net</a>
       </p>
-      <br></br>
+      <p className="auth-info">
+        Find your API Name and API Key in your WiGLE account settings under "API Token".
+      </p>
+      
       <div className="input-group">
-        <label htmlFor="username">Username</label>
+        <label htmlFor="username">API Name</label>
         <input
           type="text"
           id="username"
           name="username"
           value={credentials.username}
           onChange={handleInputChange}
-          placeholder="Your WiGLE username"
+          placeholder="Your WiGLE API Name"
         />
       </div>
       
       <div className="input-group">
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password">API Key</label>
         <input
           type="password"
           id="password"
           name="password"
           value={credentials.password}
           onChange={handleInputChange}
-          placeholder="Your WiGLE password"
+          placeholder="Your WiGLE API Key"
         />
       </div>
       

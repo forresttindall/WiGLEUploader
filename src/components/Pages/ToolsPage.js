@@ -504,9 +504,10 @@ function ToolsPage() {
 
   return (
     <div className="page-content tools-page">
+      <div className="padding">
       <h2>WiGLE Stats Badge Generator</h2>
       <p>Create a shareable image showing your WiGLE contribution activity.</p>
-      
+      </div>
       <div className="stats-generator">
         <div className="credentials-section">
           <h3>Enter your WiGLE API credentials</h3>

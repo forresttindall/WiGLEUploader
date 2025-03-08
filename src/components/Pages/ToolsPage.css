@@ -64,7 +64,8 @@
 .stats-generator {
   background-color: var(--card-bg-color);
   border-radius: var(--border-radius);
-  padding: 1.5rem;
+  padding: 0rem;
+  width: 100%;
   margin-bottom: 2rem;
   box-shadow: var(--card-shadow);
 }
@@ -82,6 +83,7 @@
 .input-group {
   margin-bottom: 1rem;
   width: 100%;
+  position: relative;
 }
 
 .input-group label {
@@ -91,37 +93,39 @@
   color: var(--text-color);
 }
 
+.padding {
+  padding: 0 2rem;
+}
+
 .input-group input {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-sm);
   background-color: var(--input-bg-color);
   color: var(--text-color);
   font-size: 1rem;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s, box-shadow 0.3s;
   box-sizing: border-box;
+  height: 48px;
+  line-height: normal;
 }
 
 .input-group input:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 2px rgba(12, 196, 0, 0.2);
-  cursor: text;
 }
 
 .input-group input:hover {
   border-color: var(--primary-color-hover);
-  cursor: pointer;
 }
 
-/* Add active state styling */
 .input-group input:active {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 2px rgba(12, 196, 0, 0.3);
 }
 
-/* Add focus-within state for the entire input group */
 .input-group:focus-within label {
   color: var(--primary-color);
 }
@@ -133,24 +137,32 @@
   border-radius: var(--border-radius-sm);
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 0.5rem;
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .fetch-button:hover, .download-button:hover {
-  background-color: var(--primary-color);
-  box-shadow: 0 0 10px var(--primary-color);
-  filter: brightness(1.1);
+  background-color: var(--primary-color-hover);
   transform: translateY(-2px);
-  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.fetch-button:active, .download-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .fetch-button:disabled {
   background-color: var(--disabled-color);
   cursor: not-allowed;
-  box-shadow: none;
   transform: none;
+  box-shadow: none;
 }
 
 .error-message {
@@ -170,9 +182,9 @@
   background-color: #121212;
   color: #eee;
   border-radius: 8px;
-  padding: 0.5rem;
+  padding: 1.5rem;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto 1.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
@@ -180,16 +192,15 @@
 .stats-header {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
   margin-bottom: 1.5rem;
-  padding: 0 1rem;
 }
 
 .stats-header .home-link {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0.5rem 1.5rem 0.5rem 0;
+  margin: 1rem;
+  margin-right: 3rem;
   cursor: pointer;
 }
 
@@ -218,23 +229,22 @@
 }
 
 .user-info {
+  width: 100%;
+  margin-top: 1rem;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  flex: 1;
-  margin-top: 0;
 }
 
 .user-info h3 {
-  margin: 0 1.5rem 0 0;
+  margin: 0 3rem 0 0;
   font-size: 2rem;
   color: #fff;
 }
 
 .stats-highlights {
   display: flex;
-  justify-content: flex-start;
-  gap: 1.5rem;
+  justify-content: center;
+  gap: 2rem;
 }
 
 .stat-box {
@@ -379,15 +389,65 @@
 }
 
 .stats-footer {
-  margin-top: 1rem;
-  text-align: center;
-  font-size: 0.8rem;
-  color: #666;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 1rem 0 0 0 !important;
+  text-align: center !important;
+  font-size: 0.7rem !important;
+  color: #666 !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  display: block !important;
 }
 
-.download-button {
-  display: block;
-  margin: 1.5rem auto;
+.stats-footer p,
+.stats-footer div,
+.stats-footer span,
+.stats-footer a {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: inline-block !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  box-sizing: border-box !important;
+  font-size: 0.7rem !important;
+}
+
+/* Mobile specific adjustments */
+@media (max-width: 768px) {
+  .stats-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .stats-header .home-link {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+  
+  .stats-highlights {
+    justify-content: center;
+  }
+  
+  .user-info {
+    flex-direction: column;
+  }
+  
+  .user-info h3 {
+    margin: 0 0 0.75rem 0;
+  }
+  
+  .day-cell {
+    width: 8px;
+    height: 8px;
+  }
 }
 
 /* Mobile download instructions */
@@ -427,31 +487,12 @@
   .mobile-instructions {
     display: block;
   }
-  
-  .stats-header {
-    flex-direction: column;
-    text-align: center;
-    padding: 0;
-  }
-  
-  .stats-header .home-link {
-    margin-right: 0;
-    margin-bottom: 1rem;
-  }
-  
-  .user-info {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .user-info h3 {
-    margin: 0 0 0.75rem 0;
-  }
-  
-  .stats-highlights {
-    justify-content: center;
-  }
+}
+
+.stats-header .home-link:hover .wifi-icon-container {
+  filter: none !important;
+  transform: none !important;
+  animation: none !important;
 }
 
 @media (max-width: 480px) {
@@ -467,9 +508,3 @@
     font-size: 0.95rem;
   }
 }
-
-.stats-header .home-link:hover .wifi-icon-container {
-  filter: none !important;
-  transform: none !important;
-  animation: none !important;
-} 

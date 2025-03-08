@@ -18,6 +18,7 @@ function ToolsPage() {
   const [error, setError] = useState(null);
   const [activityData, setActivityData] = useState([]);
   const calendarRef = useRef(null);
+  const [showInstructions, setShowInstructions] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -147,22 +148,293 @@ function ToolsPage() {
     if (!calendarRef.current) return;
     
     try {
-      const canvas = await html2canvas(calendarRef.current, {
-        backgroundColor: '#121212',
-        scale: 2, // Higher resolution
-        logging: false,
-        useCORS: true
+      // Create a clone of the element
+      const clone = calendarRef.current.cloneNode(true);
+      document.body.appendChild(clone);
+      
+      // Style the clone for optimal capture
+      clone.style.position = 'absolute';
+      clone.style.left = '-9999px';
+      clone.style.width = '925px';
+      clone.style.maxWidth = 'none';
+      clone.style.padding = '40px';
+      clone.style.paddingTop = '0px';
+      clone.style.marginTop = '0px';
+      clone.style.margin = '0';
+      clone.style.boxSizing = 'border-box';
+      
+      // Reset any transformations
+      clone.style.transform = 'none';
+      clone.style.transition = 'none';
+      
+      // Center the header elements on a single line with appropriate padding
+      const header = clone.querySelector('.stats-header');
+      if (header) {
+        header.style.display = 'flex';
+        header.style.flexDirection = 'row';
+        header.style.alignItems = 'center';
+        header.style.justifyContent = 'center';
+        header.style.width = '100%';
+        header.style.padding = '0.5rem 0';
+        header.style.margin = '0';
+        header.style.boxSizing = 'border-box';
+      }
+      
+      // Adjust the home link (icon)
+      const homeLink = clone.querySelector('.home-link');
+      if (homeLink) {
+        homeLink.style.marginRight = '20px'; // Add 20px padding to the right of the icon
+      }
+      
+      // Adjust user info
+      const userInfo = clone.querySelector('.user-info');
+      if (userInfo) {
+        userInfo.style.display = 'flex';
+        userInfo.style.flexDirection = 'row';
+        userInfo.style.alignItems = 'center';
+        userInfo.style.width = 'auto';
+        userInfo.style.flex = '0 0 auto';
+        userInfo.style.padding = '0.5rem';
+        userInfo.style.margin = '0';
+      }
+      
+      // Adjust username
+      const username = userInfo ? userInfo.querySelector('h3') : null;
+      if (username) {
+        username.style.margin = '0 2rem 0 0';
+        username.style.whiteSpace = 'nowrap';
+        username.style.padding = '0';
+      }
+      
+      // Adjust stats highlights
+      const statsHighlights = clone.querySelector('.stats-highlights');
+      if (statsHighlights) {
+        statsHighlights.style.display = 'flex';
+        statsHighlights.style.flexDirection = 'row';
+        statsHighlights.style.alignItems = 'center';
+        statsHighlights.style.padding = '0';
+        statsHighlights.style.margin = '0';
+      }
+      
+      // Adjust stat boxes
+      const statBoxes = clone.querySelectorAll('.stat-box');
+      statBoxes.forEach(box => {
+        box.style.margin = '0 0.75rem';
+        box.style.padding = '0.4rem';
       });
       
-      const image = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
-      link.href = image;
-      link.download = `wigle-stats-${credentials.displayName || 'user'}.png`;
-      link.click();
+      // Center the calendar and remove excess padding
+      const calendar = clone.querySelector('.activity-calendar');
+      if (calendar) {
+        calendar.style.display = 'flex';
+        calendar.style.flexDirection = 'column';
+        calendar.style.alignItems = 'center';
+        calendar.style.width = '100%';
+        calendar.style.marginTop = '1rem';
+        calendar.style.padding = '0';
+      }
+      
+      // Adjust the calendar container
+      const calendarContainer = clone.querySelector('.calendar-container');
+      if (calendarContainer) {
+        calendarContainer.style.padding = '0';
+        calendarContainer.style.margin = '0';
+      }
+      
+      // Adjust the footer
+      const footer = clone.querySelector('.stats-footer');
+      if (footer) {
+        footer.style.marginTop = '1rem';
+        footer.style.padding = '0';
+      }
+      
+      // Force layout calculation
+      void clone.offsetWidth;
+      
+      // Capture the image with exact dimensions and no extra space
+      const canvas = await html2canvas(clone, {
+        backgroundColor: '#121212',
+        scale: 2,
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+        width: clone.offsetWidth,
+        height: clone.offsetHeight
+      });
+      
+      // Remove the clone
+      document.body.removeChild(clone);
+      
+      // Get image data URL
+      const image = canvas.toDataURL('image/png', 1.0);
+      
+      // Handle mobile vs desktop download
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      
+      if (isMobile) {
+        setShowInstructions(true);
+        const blob = dataURLtoBlob(image);
+        const blobUrl = URL.createObjectURL(blob);
+        
+        // For iOS devices
+        if (isIOS) {
+          // Create a full-screen viewer with the same styling as desktop
+          const viewer = document.createElement('div');
+          viewer.style.position = 'fixed';
+          viewer.style.top = '0';
+          viewer.style.left = '0';
+          viewer.style.width = '100vw';
+          viewer.style.height = '100vh';
+          viewer.style.backgroundColor = '#121212';
+          viewer.style.zIndex = '9999';
+          viewer.style.overflow = 'auto';
+          viewer.style.display = 'flex';
+          viewer.style.flexDirection = 'column';
+          viewer.style.alignItems = 'center';
+          viewer.style.padding = '0';
+          
+          // Add a close button
+          const closeBtn = document.createElement('button');
+          closeBtn.innerText = 'Close';
+          closeBtn.style.position = 'fixed';
+          closeBtn.style.top = '10px';
+          closeBtn.style.right = '10px';
+          closeBtn.style.padding = '8px 16px';
+          closeBtn.style.backgroundColor = '#333';
+          closeBtn.style.color = '#fff';
+          closeBtn.style.border = 'none';
+          closeBtn.style.borderRadius = '4px';
+          closeBtn.style.cursor = 'pointer';
+          closeBtn.style.zIndex = '10000';
+          closeBtn.onclick = () => {
+            document.body.removeChild(viewer);
+          };
+          
+          // Create a container for the image that allows horizontal scrolling
+          const imgContainer = document.createElement('div');
+          imgContainer.style.width = '100%';
+          imgContainer.style.overflowX = 'auto';
+          imgContainer.style.overflowY = 'hidden';
+          imgContainer.style.WebkitOverflowScrolling = 'touch';
+          imgContainer.style.display = 'flex';
+          imgContainer.style.justifyContent = 'center';
+          imgContainer.style.alignItems = 'center';
+          imgContainer.style.padding = '0';
+          imgContainer.style.margin = '0';
+          
+          // Create the image
+          const img = document.createElement('img');
+          img.src = blobUrl;
+          img.style.width = 'auto';
+          img.style.height = 'auto';
+          img.style.maxHeight = '90vh';
+          img.style.display = 'block';
+          img.style.margin = '0';
+          img.style.padding = '0';
+          
+          // Add instructions
+          const instructions = document.createElement('p');
+          instructions.innerText = 'Press and hold on the image, then select "Save Image" to add it to your photos.';
+          instructions.style.color = '#fff';
+          instructions.style.textAlign = 'center';
+          instructions.style.padding = '10px';
+          instructions.style.margin = '10px 0';
+          instructions.style.width = '100%';
+          
+          // Assemble the viewer
+          imgContainer.appendChild(img);
+          viewer.appendChild(closeBtn);
+          viewer.appendChild(imgContainer);
+          viewer.appendChild(instructions);
+          document.body.appendChild(viewer);
+        } else {
+          // For Android - open in a new window with centered image
+          const newWindow = window.open();
+          newWindow.document.write(`
+            <html>
+              <head>
+                <title>WiGLE Stats Badge</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                  body {
+                    margin: 0;
+                    padding: 0;
+                    background-color: #121212;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    min-height: 100vh;
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                  }
+                  .img-container {
+                    width: 100%;
+                    overflow-x: auto;
+                    overflow-y: hidden;
+                    -webkit-overflow-scrolling: touch;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 0;
+                    margin: 0;
+                  }
+                  img {
+                    width: auto;
+                    height: auto;
+                    max-height: 90vh;
+                    display: block;
+                    margin: 0;
+                    padding: 0;
+                  }
+                  p {
+                    color: white;
+                    text-align: center;
+                    padding: 10px;
+                    margin: 10px 0;
+                    width: 100%;
+                  }
+                </style>
+              </head>
+              <body>
+                <div class="img-container">
+                  <img src="${blobUrl}" alt="WiGLE Stats Badge">
+                </div>
+                <p>Press and hold on the image, then select "Save Image" to add it to your photos.</p>
+              </body>
+            </html>
+          `);
+          newWindow.document.close();
+        }
+        
+        // Clean up the blob URL after a delay
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+      } else {
+        // For desktop - use standard download
+        const link = document.createElement('a');
+        link.href = image;
+        link.download = `wigle-stats-${credentials.displayName || 'user'}.png`;
+        link.click();
+      }
     } catch (error) {
       console.error('Error generating image:', error);
       setError('Failed to generate image');
     }
+  };
+  
+  // Helper function to convert data URL to Blob
+  const dataURLtoBlob = (dataURL) => {
+    const arr = dataURL.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    
+    return new Blob([u8arr], { type: mime });
   };
 
   // Format number with commas
@@ -361,6 +633,26 @@ function ToolsPage() {
             >
               Download Image
             </button>
+            
+            {/* Enhanced mobile instructions */}
+            {showInstructions && (
+              <div className="mobile-save-instructions">
+                <h4>Save Your Badge</h4>
+                {/iPad|iPhone|iPod/.test(navigator.userAgent) ? (
+                  <p>
+                    On iOS: Tap and hold on the image that appears, then select "Save to Photos"
+                  </p>
+                ) : (
+                  <p>
+                    On Android: The download should start automatically. Check your notification bar or Downloads folder.
+                  </p>
+                )}
+              </div>
+            )}
+            
+            <p className="mobile-instructions">
+              After clicking Download, follow the on-screen instructions to save to your photos.
+            </p>
           </div>
         )}
       </div>

@@ -1,11 +1,11 @@
 .tools-page {
-  padding: 1rem;
+  padding: 0;
 }
 
 .page-content.tools-page {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 0;
   width: 100%;
 }
 
@@ -64,15 +64,17 @@
 .stats-generator {
   background-color: var(--card-bg-color);
   border-radius: var(--border-radius);
-  padding: 1.5rem;
   margin-bottom: 2rem;
   box-shadow: var(--card-shadow);
   box-sizing: border-box;
+  padding: 0;
+  width: 100%;
 }
 
 .credentials-section {
   margin-bottom: 1.5rem;
   width: 100%;
+  padding: 0;
 }
 
 .credentials-section h3 {
@@ -83,7 +85,8 @@
 .input-group {
   margin-bottom: 1rem;
   width: 100%;
-}yy
+  position: relative;
+}
 
 .input-group label {
   display: block;
@@ -128,6 +131,7 @@
   color: var(--primary-color);
 }
 
+/* Center the fetch and download buttons */
 .fetch-button, .download-button {
   background-color: var(--primary-color);
   color: var(--button-text-color);
@@ -135,9 +139,23 @@
   border-radius: var(--border-radius-sm);
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 0.5rem;
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  height: 48px;
+  display: block; /* Change from inline-flex to block */
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0.5rem auto; /* Center horizontally with auto margins */
+}
+
+/* Add a container for buttons if needed */
+.button-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 1rem;
 }
 
 .fetch-button:hover, .download-button:hover {
@@ -179,12 +197,16 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   overflow-x: hidden;
   box-sizing: border-box;
+  border: none;
+  margin-left: auto;
+  margin-right: auto;
 }
 
+/* Center the top row (icon, username, stats) as a group */
 .stats-header {
   display: flex;
   align-items: center;
-  margin-bottom: 1.5rem;
+  justify-content: center !important;
 }
 
 .stats-header .home-link {
@@ -268,6 +290,7 @@
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  justify-content: center;
 }
 
 .day-labels {

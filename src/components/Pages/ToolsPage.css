@@ -1,11 +1,11 @@
 .tools-page {
-  padding: 0;
+  padding: 1rem;
 }
 
 .page-content.tools-page {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0;
+  padding: 1rem;
   width: 100%;
 }
 
@@ -64,17 +64,14 @@
 .stats-generator {
   background-color: var(--card-bg-color);
   border-radius: var(--border-radius);
+  padding: 1.5rem;
   margin-bottom: 2rem;
   box-shadow: var(--card-shadow);
-  box-sizing: border-box;
-  padding: 0;
-  width: 100%;
 }
 
 .credentials-section {
   margin-bottom: 1.5rem;
   width: 100%;
-  padding: 0;
 }
 
 .credentials-section h3 {
@@ -85,7 +82,6 @@
 .input-group {
   margin-bottom: 1rem;
   width: 100%;
-  position: relative;
 }
 
 .input-group label {
@@ -97,7 +93,7 @@
 
 .input-group input {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-sm);
   background-color: var(--input-bg-color);
@@ -105,7 +101,6 @@
   font-size: 1rem;
   transition: all 0.3s ease;
   box-sizing: border-box;
-  height: 48px;
 }
 
 .input-group input:focus {
@@ -131,7 +126,6 @@
   color: var(--primary-color);
 }
 
-/* Center the fetch and download buttons */
 .fetch-button, .download-button {
   background-color: var(--primary-color);
   color: var(--button-text-color);
@@ -139,23 +133,9 @@
   border-radius: var(--border-radius-sm);
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
-  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
-  height: 48px;
-  display: block; /* Change from inline-flex to block */
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  margin: 0.5rem auto; /* Center horizontally with auto margins */
-}
-
-/* Add a container for buttons if needed */
-.button-container {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-top: 1rem;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
 }
 
 .fetch-button:hover, .download-button:hover {
@@ -190,23 +170,17 @@
   background-color: #121212;
   color: #eee;
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: 0.5rem;
   width: 100%;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto 1.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  overflow-x: hidden;
-  box-sizing: border-box;
-  border: none;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-/* Center the top row (icon, username, stats) as a group */
 .stats-header {
   display: flex;
   align-items: center;
-  justify-content: center !important;
+  margin-bottom: 1.5rem;
 }
 
 .stats-header .home-link {
@@ -247,6 +221,7 @@
   margin-top: 1rem;
   display: flex;
   align-items: center;
+ 
 }
 
 .user-info h3 {
@@ -287,10 +262,6 @@
   display: flex;
   overflow-x: auto;
   padding-bottom: 0.5rem;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  justify-content: center;
 }
 
 .day-labels {
@@ -337,14 +308,10 @@
 .months-grid {
   display: flex;
   flex-wrap: nowrap;
-  min-width: 0;
-  width: auto;
 }
 
 .month-column {
   margin-right: 0.25rem;
-  flex-shrink: 1;
-  min-width: 0;
 }
 
 .month-label {
@@ -356,14 +323,12 @@
 
 .weeks-container {
   display: flex;
-  min-width: 0;
 }
 
 .week-row {
   display: flex;
   flex-direction: column;
   margin-right: 1px;
-  min-width: 0;
 }
 
 .day-cell {
@@ -413,39 +378,51 @@
 }
 
 .stats-footer {
-  width: 100% !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
-  overflow: hidden !important;
-  padding: 0 !important;
-  margin: 1rem 0 0 0 !important;
-  text-align: center !important;
-  font-size: 0.7rem !important;
-  color: #666 !important;
-  white-space: normal !important;
-  word-wrap: break-word !important;
-  word-break: break-word !important;
-  display: block !important;
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #666;
 }
 
-.stats-footer p,
-.stats-footer div,
-.stats-footer span,
-.stats-footer a {
-  width: 100% !important;
-  max-width: 100% !important;
-  display: inline-block !important;
-  white-space: normal !important;
-  word-wrap: break-word !important;
-  word-break: break-word !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  box-sizing: border-box !important;
-  font-size: 0.7rem !important;
+.download-button {
+  display: block;
+  margin: 1.5rem auto;
 }
 
-/* Mobile specific adjustments */
+/* Mobile download instructions */
+.mobile-instructions {
+  font-size: 0.8rem;
+  color: #888;
+  text-align: center;
+  margin-top: 0.5rem;
+  padding: 0 1rem;
+  display: none; /* Hidden by default */
+}
+
+/* Only show instructions on mobile */
 @media (max-width: 768px) {
+  .mobile-instructions {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  .tools-page {
+    padding: 1rem 1rem;
+  }
+  
+  .page-content.tools-page {
+    padding: 1rem 1rem;
+  }
+  
+  .stats-generator {
+    padding: 1rem 0.75rem;
+  }
+  
+  .stats-card {
+    padding: 1rem;
+  }
+  
   .stats-header {
     flex-direction: column;
     text-align: center;
@@ -468,55 +445,18 @@
     margin: 0 0 0.75rem 0;
   }
   
-  .day-cell {
-    width: 8px;
-    height: 8px;
+  .input-group {
+    width: 100%;
   }
-}
-
-/* Mobile download instructions */
-.mobile-instructions {
-  font-size: 0.8rem;
-  color: #888;
-  text-align: center;
-  margin-top: 0.5rem;
-  padding: 0 1rem;
-  display: none; /* Hidden by default */
-}
-
-/* Enhanced instructions that appear after clicking download */
-.mobile-save-instructions {
-  background-color: rgba(12, 196, 0, 0.1);
-  border: 1px solid var(--primary-color);
-  border-radius: var(--border-radius-sm);
-  padding: 1rem;
-  margin: 1rem auto;
-  max-width: 90%;
-  text-align: center;
-}
-
-.mobile-save-instructions h4 {
-  color: var(--primary-color);
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-}
-
-.mobile-save-instructions p {
-  margin: 0;
-  font-size: 0.9rem;
-}
-
-/* Only show instructions on mobile */
-@media (max-width: 768px) {
-  .mobile-instructions {
-    display: block;
+  
+  .input-group input {
+    width: 100%;
+    max-width: none;
   }
-}
-
-.stats-header .home-link:hover .wifi-icon-container {
-  filter: none !important;
-  transform: none !important;
-  animation: none !important;
+  
+  .credentials-section {
+    padding: 0;
+  }
 }
 
 @media (max-width: 480px) {
@@ -531,14 +471,10 @@
   .input-group input {
     font-size: 0.95rem;
   }
-  
-  .stats-card {
-    padding: 1rem 0.5rem;
-  }
-  
-  .day-cell {
-    width: 4px;
-    height: 4px;
-    margin: 0.5px;
-  }
 }
+
+.stats-header .home-link:hover .wifi-icon-container {
+  filter: none !important;
+  transform: none !important;
+  animation: none !important;
+} 

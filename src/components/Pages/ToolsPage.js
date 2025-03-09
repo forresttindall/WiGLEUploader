@@ -157,18 +157,14 @@ function ToolsPage() {
       clone.style.left = '-9999px';
       clone.style.width = '900px';
       clone.style.maxWidth = 'none';
-      clone.style.padding = '0px';
+      clone.style.padding = '20px';
       clone.style.paddingTop = '0px';
       clone.style.paddingBottom = '40px';
       clone.style.marginTop = '0px';
       clone.style.margin = '0';
       clone.style.boxSizing = 'border-box';
       
-      // Reset any transformations
-      clone.style.transform = 'none';
-      clone.style.transition = 'none';
-      
-      // Center the header elements on a single line with appropriate padding
+      // Center the header elements on a single line
       const header = clone.querySelector('.stats-header');
       if (header) {
         header.style.display = 'flex';
@@ -178,13 +174,12 @@ function ToolsPage() {
         header.style.width = '100%';
         header.style.padding = '0.5rem 0';
         header.style.margin = '0';
-        header.style.boxSizing = 'border-box';
       }
       
-      // Adjust the home link (icon)
+      // Add 20px padding to the right of the icon
       const homeLink = clone.querySelector('.home-link');
       if (homeLink) {
-        homeLink.style.marginRight = '20px'; // Add 20px padding to the right of the icon
+        homeLink.style.marginRight = '20px';
       }
       
       // Adjust user info
@@ -235,31 +230,17 @@ function ToolsPage() {
         calendar.style.padding = '0';
       }
       
-      // Adjust the calendar container
-      const calendarContainer = clone.querySelector('.calendar-container');
-      if (calendarContainer) {
-        calendarContainer.style.padding = '0';
-        calendarContainer.style.margin = '0';
-      }
-      
-      // Adjust the footer
-      const footer = clone.querySelector('.stats-footer');
-      if (footer) {
-        footer.style.marginTop = '1rem';
-        footer.style.padding = '0';
-      }
-      
       // Force layout calculation
       void clone.offsetWidth;
       
-      // Capture the image with exact dimensions and no extra space
+      // Capture the image
       const canvas = await html2canvas(clone, {
         backgroundColor: '#121212',
         scale: 2,
         logging: false,
         useCORS: true,
         allowTaint: true,
-        width: clone.offsetWidth,
+        width: 900,
         height: clone.offsetHeight
       });
       
@@ -280,7 +261,7 @@ function ToolsPage() {
         
         // For iOS devices
         if (isIOS) {
-          // Create a full-screen viewer with the same styling as desktop
+          // Create a full-screen viewer
           const viewer = document.createElement('div');
           viewer.style.position = 'fixed';
           viewer.style.top = '0';
@@ -293,7 +274,6 @@ function ToolsPage() {
           viewer.style.display = 'flex';
           viewer.style.flexDirection = 'column';
           viewer.style.alignItems = 'center';
-          viewer.style.padding = '0';
           
           // Add a close button
           const closeBtn = document.createElement('button');
@@ -312,7 +292,7 @@ function ToolsPage() {
             document.body.removeChild(viewer);
           };
           
-          // Create a container for the image that allows horizontal scrolling
+          // Create a container for the image
           const imgContainer = document.createElement('div');
           imgContainer.style.width = '100%';
           imgContainer.style.overflowX = 'auto';
@@ -321,8 +301,6 @@ function ToolsPage() {
           imgContainer.style.display = 'flex';
           imgContainer.style.justifyContent = 'center';
           imgContainer.style.alignItems = 'center';
-          imgContainer.style.padding = '0';
-          imgContainer.style.margin = '0';
           
           // Create the image
           const img = document.createElement('img');
@@ -331,8 +309,6 @@ function ToolsPage() {
           img.style.height = 'auto';
           img.style.maxHeight = '90vh';
           img.style.display = 'block';
-          img.style.margin = '0';
-          img.style.padding = '0';
           
           // Add instructions
           const instructions = document.createElement('p');
@@ -350,7 +326,7 @@ function ToolsPage() {
           viewer.appendChild(instructions);
           document.body.appendChild(viewer);
         } else {
-          // For Android - open in a new window with centered image
+          // For Android - open in a new window
           const newWindow = window.open();
           newWindow.document.write(`
             <html>
@@ -377,16 +353,12 @@ function ToolsPage() {
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    padding: 0;
-                    margin: 0;
                   }
                   img {
                     width: auto;
                     height: auto;
                     max-height: 90vh;
                     display: block;
-                    margin: 0;
-                    padding: 0;
                   }
                   p {
                     color: white;

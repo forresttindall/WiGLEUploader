@@ -62,26 +62,30 @@
 
 /* Stats Generator Styles */
 .stats-generator {
-  background-color: var(--card-bg-color);
-  border-radius: var(--border-radius);
-  padding: 1.5rem;
+  background-color: transparent;
+  border-radius: 0;
   margin-bottom: 2rem;
-  box-shadow: var(--card-shadow);
+  box-shadow: none;
+  padding: 0;
+  width: 100%;
 }
 
 .credentials-section {
   margin-bottom: 1.5rem;
   width: 100%;
+  padding: 0;
 }
 
 .credentials-section h3 {
   margin-top: 0;
   color: var(--primary-color);
+  padding: 0;
 }
 
 .input-group {
   margin-bottom: 1rem;
   width: 100%;
+  padding: 0;
 }
 
 .input-group label {
@@ -134,6 +138,8 @@
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   cursor: pointer;
+  justify-content: center;
+  text-align: center;
   transition: all 0.3s ease;
   margin-top: 0.5rem;
 }
@@ -180,6 +186,8 @@
 .stats-header {
   display: flex;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   margin-bottom: 1.5rem;
 }
 
@@ -256,11 +264,15 @@
 /* Activity Calendar Styles */
 .activity-calendar {
   margin-top: 1rem;
+  justify-content: center;
+  text-align: center;
 }
 
 .calendar-container {
   display: flex;
   overflow-x: auto;
+  justify-content: center;
+  text-align: center;
   padding-bottom: 0.5rem;
 }
 
@@ -389,21 +401,11 @@
   margin: 1.5rem auto;
 }
 
-/* Mobile download instructions */
-.mobile-instructions {
-  font-size: 0.8rem;
-  color: #888;
-  text-align: center;
-  margin-top: 0.5rem;
-  padding: 0 1rem;
-  display: none; /* Hidden by default */
-}
-
-/* Only show instructions on mobile */
-@media (max-width: 768px) {
-  .mobile-instructions {
-    display: block;
-  }
+/* Only center the fetch button */
+.fetch-button {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @media (max-width: 768px) {
@@ -478,3 +480,7 @@
   transform: none !important;
   animation: none !important;
 } 
+
+.stats-header {
+    justify-content: center;
+  }

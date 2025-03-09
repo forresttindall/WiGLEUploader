@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
 
 :root {
-  --bg-color: #121212;
-  --card-bg: #1e1e1e;
+  --bg-color: #000000;
+  --card-bg: #000000;
   --primary-color: #0CC400;
   --secondary-color: #e0e0e0;
   --text-color: #e0e0e0;
@@ -43,19 +43,7 @@ body {
   position: relative;
 }
 
-body:before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(5, 9, 0, 0.6) 50%),
-              linear-gradient(90deg, rgba(22, 0, 0, 0.8), rgba(0, 22, 0, 0.8), rgba(0, 0, 22, 0.8));
-  background-size: 100% 2px, 3px 100%;
-  z-index: -1;
-  pointer-events: none;
-}
+
 
 .App {
   min-height: 100vh;
@@ -71,16 +59,15 @@ body:before {
 .container {
   width: 100%;
   max-width: 1000px;
-  background-color: var(--card-bg);
-  border-radius: var(--border-radius-lg);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  margin-bottom: 2rem;
-  transition: all 0.3s ease;
   margin: 0 auto;
   padding: 0;
+  border: none;
 }
 
 .container > *:not(.nav-bar) {
@@ -394,26 +381,12 @@ footer a:hover {
 }
 
 .container {
-  animation: terminal-flicker 5s infinite;
+  animation: none;
 }
 
 /* Add a subtle scan line effect */
 .container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(32, 32, 32, 0.05) 50%,
-    transparent 100%
-  );
-  background-size: 100% 4px;
-  pointer-events: none;
-  z-index: 1;
+  display: none;
 }
 
 /* Custom scrollbar */

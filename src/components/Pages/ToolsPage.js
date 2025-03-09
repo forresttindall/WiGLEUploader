@@ -155,9 +155,9 @@ function ToolsPage() {
       // Style the clone for optimal capture
       clone.style.position = 'absolute';
       clone.style.left = '-9999px';
-      clone.style.width = '900px';
+      clone.style.width = '930px';
       clone.style.maxWidth = 'none';
-      clone.style.padding = '20px';
+      clone.style.padding = '40px';
       clone.style.paddingTop = '0px';
       clone.style.paddingBottom = '40px';
       clone.style.marginTop = '0px';
@@ -240,7 +240,7 @@ function ToolsPage() {
         logging: false,
         useCORS: true,
         allowTaint: true,
-        width: 900,
+        width: 930,
         height: clone.offsetHeight
       });
       

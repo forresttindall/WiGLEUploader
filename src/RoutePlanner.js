@@ -112,9 +112,7 @@ const detectBrowser = () => {
   };
 };
 
-// Use environment variable for Google Maps API key
-
-// Replace direct API key usage with environment variable
+// Improved map loading function with better error handling and caching prevention
 const loadGoogleMapsWithRetry = (callback, retries = 3) => {
   // Check if Google Maps is already loaded
   if (window.google && window.google.maps && window.google.maps.visualization) {
@@ -125,8 +123,14 @@ const loadGoogleMapsWithRetry = (callback, retries = 3) => {
   
   console.log(`Loading Google Maps API (attempts left: ${retries})...`);
   
+  // Clear any existing Google Maps objects to prevent caching issues
+  window.google = undefined;
+  
+  // Create a unique callback name to prevent caching
+  const callbackName = `initGoogleMapsCallback_${Date.now()}`;
+  
   // Create a global callback function
-  window.initGoogleMapsCallback = () => {
+  window[callbackName] = () => {
     console.log('Google Maps API loaded successfully');
     // Small delay to ensure visualization library is fully loaded
     setTimeout(() => {
@@ -142,18 +146,19 @@ const loadGoogleMapsWithRetry = (callback, retries = 3) => {
   };
   
   // Remove any existing script tags to avoid conflicts
-  const existingScript = document.getElementById('google-maps-api');
-  if (existingScript) {
-    existingScript.remove();
-  }
+  const existingScripts = document.querySelectorAll('script[src*="maps.googleapis.com"]');
+  existingScripts.forEach(script => script.remove());
   
   // Use environment variable for API key
   const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   
+  // Add cache-busting parameter
+  const cacheBuster = `v=${Date.now()}`;
+  
   // Create and append the script tag with async loading
   const script = document.createElement('script');
   script.id = 'google-maps-api';
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=visualization,places,drawing&callback=initGoogleMapsCallback&loading=async`;
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=visualization,places,drawing&callback=${callbackName}&loading=async&${cacheBuster}`;
   script.async = true;
   script.defer = true;
   script.onerror = (error) => {
@@ -164,6 +169,16 @@ const loadGoogleMapsWithRetry = (callback, retries = 3) => {
   };
   
   document.head.appendChild(script);
+  
+  // Set a timeout to handle cases where the callback isn't called
+  setTimeout(() => {
+    if (!window.google || !window.google.maps) {
+      console.error('Google Maps API loading timed out');
+      if (retries > 0) {
+        loadGoogleMapsWithRetry(callback, retries - 1);
+      }
+    }
+  }, 10000);
 };
 
 // Add this at the top of your component, outside any functions
@@ -829,9 +844,12 @@ function RoutePlanner() {
       try {
         setLoadingMessage(`Snapping points to roads (${i+1}-${Math.min(i+MAX_POINTS_PER_REQUEST, cleanedPoints.length)} of ${cleanedPoints.length})...`);
         
+        // Use environment variable for API key
+        const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+        
         // Call the Roads API to snap points to roads
         const response = await fetch(
-          `https://roads.googleapis.com/v1/snapToRoads?path=${pathParam}&interpolate=true&key=AIzaSyC39qFGmCOo3FSV2AAYJMoR-OtspiPjkuU`,
+          `https://roads.googleapis.com/v1/snapToRoads?path=${pathParam}&interpolate=true&key=${apiKey}`,
           { method: 'GET' }
         );
         

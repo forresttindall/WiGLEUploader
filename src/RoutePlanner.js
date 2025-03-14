@@ -83,7 +83,38 @@ const darkMapStyle = [
   },
 ];
 
-// Add this function at the top of your component, before useEffect
+// Add these variables at the top of your file
+let mapInitAttempts = 0;
+const MAX_MAP_INIT_ATTEMPTS = 3;
+
+// Add this function to detect browser and platform
+const detectBrowser = () => {
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  
+  // Detect platform
+  const isIOS = /iPhone|iPad|iPod/.test(userAgent) && !window.MSStream;
+  const isAndroid = /Android/.test(userAgent);
+  
+  // Detect browser
+  const isChrome = /Chrome/.test(userAgent) && /Google Inc/.test(navigator.vendor);
+  const isSafari = /Safari/.test(userAgent) && /Apple Computer/.test(navigator.vendor);
+  const isFirefox = /Firefox/.test(userAgent);
+  const isEdge = /Edg/.test(userAgent);
+  
+  return {
+    isIOS,
+    isAndroid,
+    isChrome,
+    isSafari,
+    isFirefox,
+    isEdge,
+    isMobile: isIOS || isAndroid
+  };
+};
+
+// Use environment variable for Google Maps API key
+
+// Replace direct API key usage with environment variable
 const loadGoogleMapsWithRetry = (callback, retries = 3) => {
   // Check if Google Maps is already loaded
   if (window.google && window.google.maps && window.google.maps.visualization) {
@@ -107,7 +138,7 @@ const loadGoogleMapsWithRetry = (callback, retries = 3) => {
           loadGoogleMapsWithRetry(callback, retries - 1);
         }
       }
-    }, 500);
+    }, 1000);
   };
   
   // Remove any existing script tags to avoid conflicts
@@ -116,31 +147,56 @@ const loadGoogleMapsWithRetry = (callback, retries = 3) => {
     existingScript.remove();
   }
   
-  // Create and append the script tag
+  // Use environment variable for API key
+  const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+  
+  // Create and append the script tag with async loading
   const script = document.createElement('script');
   script.id = 'google-maps-api';
-  script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyC39qFGmCOo3FSV2AAYJMoR-OtspiPjkuU&libraries=visualization,places,drawing&callback=initGoogleMapsCallback`;
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=visualization,places,drawing&callback=initGoogleMapsCallback&loading=async`;
   script.async = true;
   script.defer = true;
   script.onerror = (error) => {
     console.error('Error loading Google Maps API:', error);
     if (retries > 0) {
-      setTimeout(() => loadGoogleMapsWithRetry(callback, retries - 1), 1000);
+      setTimeout(() => loadGoogleMapsWithRetry(callback, retries - 1), 2000);
     }
   };
   
   document.head.appendChild(script);
 };
 
+// Add this at the top of your component, outside any functions
+let globalMapInstance = null;
+let globalCredentials = null;
+
 function RoutePlanner() {
+  // Detect browser once when component mounts
+  const [browserInfo] = useState(detectBrowser);
+  
+  // Log browser detection info
+  useEffect(() => {
+    console.log('Browser detection:', browserInfo);
+  }, [browserInfo]);
+  
   // State for WiGLE credentials
   const [credentials, setCredentials] = useState(() => {
     const savedCredentials = localStorage.getItem('wigleCredentials');
-    return savedCredentials ? JSON.parse(savedCredentials) : {
+    const parsedCredentials = savedCredentials ? JSON.parse(savedCredentials) : {
       username: '',
       apiToken: ''
     };
+    
+    // Store in global variable for access from event handlers
+    globalCredentials = parsedCredentials;
+    
+    return parsedCredentials;
   });
+  
+  // Update global credentials when state changes
+  useEffect(() => {
+    globalCredentials = credentials;
+  }, [credentials]);
   
   // State for map data
   const [wigleData, setWigleData] = useState([]);
@@ -164,6 +220,9 @@ function RoutePlanner() {
         [name]: value
       };
       
+      // Update global reference
+      globalCredentials = newCredentials;
+      
       localStorage.setItem('wigleCredentials', JSON.stringify(newCredentials));
       return newCredentials;
     });
@@ -186,50 +245,299 @@ function RoutePlanner() {
     };
   }, []);
   
+  // Fix for iOS Firefox width issue
+  useEffect(() => {
+    if (browserInfo.isIOS && browserInfo.isFirefox) {
+      console.log('Applying iOS Firefox fixes');
+      
+      // Fix viewport
+      const viewportMeta = document.querySelector('meta[name="viewport"]');
+      if (viewportMeta) {
+        viewportMeta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+      } else {
+        const newMeta = document.createElement('meta');
+        newMeta.name = 'viewport';
+        newMeta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+        document.head.appendChild(newMeta);
+      }
+      
+      // Fix width issues
+      document.documentElement.style.width = '100%';
+      document.body.style.width = '100%';
+      document.body.style.overflowX = 'hidden';
+      
+      // Force layout recalculation
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 500);
+    }
+    
+    return () => {
+      // Cleanup
+      if (browserInfo.isIOS && browserInfo.isFirefox) {
+        document.documentElement.style.width = '';
+        document.body.style.width = '';
+        document.body.style.overflowX = '';
+      }
+    };
+  }, [browserInfo]);
+  
+  // Fix map size issue - restore original dimensions
+  useEffect(() => {
+    const styleEl = document.createElement('style');
+    styleEl.innerHTML = `
+      .fullscreen-loading-message {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        z-index: 10000;
+        max-width: 80%;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+      
+      .fullscreen-loading-spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #0CC400;
+        animation: spin 1s ease-in-out infinite;
+        vertical-align: middle;
+      }
+      
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      
+      /* Restore map to 70vh height */
+      .map-container {
+        width: 100% !important;
+        height: 70vh !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      
+      .map-container-wrapper {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+    `;
+    document.head.appendChild(styleEl);
+    
+    return () => {
+      document.head.removeChild(styleEl);
+    };
+  }, []);
+  
+  // Modify the initMap function for better browser compatibility
   const initMap = () => {
-    if (!mapContainerRef.current || map) return;
+    if (!mapContainerRef.current) return;
+    if (map) {
+      console.log('Map already initialized, skipping');
+      return;
+    }
     
     setIsLoading(true);
     setLoadingMessage('Initializing map...');
     
     try {
-      // Create the map instance with dark mode styles always applied
+      // Make sure Google Maps API is loaded
+      if (!window.google || !window.google.maps) {
+        console.error('Google Maps API not loaded');
+        setLoadingMessage('Error: Google Maps API not loaded. Please refresh the page.');
+        return;
+      }
+      
+      console.log(`Device detection - iOS: ${browserInfo.isIOS}, Firefox: ${browserInfo.isFirefox}, Android: ${browserInfo.isAndroid}`);
+      
+      // Create map instance with appropriate options
       const mapInstance = new window.google.maps.Map(mapContainerRef.current, {
-        center: { lat: 37.7749, lng: -122.4194 }, // Default to San Francisco
-        zoom: 13,
+        center: { lat: 37.7749, lng: -122.4194 },
+        zoom: 12,
         mapTypeId: 'roadmap',
-        mapTypeControl: true,
         fullscreenControl: true,
         streetViewControl: false,
-        mapTypeControlOptions: {
-          style: window.google.maps.MapTypeControlStyle.DROPDOWN_MENU
-        },
-        styles: darkMapStyle // Always apply dark mode styles
+        mapTypeControl: true,
+        zoomControl: true,
+        styles: darkMapStyle
       });
       
-      // Set map in state
+      // Store map reference
       setMap(mapInstance);
+      globalMapInstance = mapInstance;
       
-      // Add geolocation control
-      const locationButton = document.createElement("button");
-      locationButton.textContent = "My Location";
-      locationButton.classList.add("custom-map-control-button");
-      locationButton.style.backgroundColor = "#0CC400";
-      locationButton.style.color = "white";
-      locationButton.style.padding = "10px";
-      locationButton.style.border = "none";
-      locationButton.style.borderRadius = "4px";
-      locationButton.style.margin = "10px";
-      locationButton.style.cursor = "pointer";
+      // Add custom fullscreen control for iOS
+      if (browserInfo.isIOS) {
+        console.log('Adding custom fullscreen button for iOS');
+        
+        const fullscreenControlDiv = document.createElement('div');
+        fullscreenControlDiv.className = 'custom-fullscreen-control';
+        fullscreenControlDiv.title = 'Toggle fullscreen';
+        fullscreenControlDiv.innerHTML = `
+          <button style="
+            background: white;
+            border: 2px solid #0CC400;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            cursor: pointer;
+            margin: 10px;
+            padding: 5px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+              <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+            </svg>
+          </button>
+        `;
+        
+        fullscreenControlDiv.addEventListener('click', () => {
+          const mapDiv = mapContainerRef.current;
+          
+          try {
+            // iOS-specific fullscreen implementation
+            if (browserInfo.isIOS) {
+              // Toggle a class that makes the map container take over the screen
+              document.body.classList.toggle('map-fullscreen-mode');
+              
+              if (document.body.classList.contains('map-fullscreen-mode')) {
+                // Save original styles
+                mapDiv.dataset.originalHeight = mapDiv.style.height;
+                mapDiv.dataset.originalPosition = mapDiv.style.position;
+                
+                // Apply fullscreen styles
+                document.body.style.overflow = 'hidden';
+                mapDiv.style.position = 'fixed';
+                mapDiv.style.top = '0';
+                mapDiv.style.left = '0';
+                mapDiv.style.width = '100%';
+                mapDiv.style.height = '100%';
+                mapDiv.style.zIndex = '9999';
+                
+                // Add a close button
+                const closeButton = document.createElement('button');
+                closeButton.id = 'exit-fullscreen-btn';
+                closeButton.innerHTML = '✕';
+                closeButton.style.position = 'fixed';
+                closeButton.style.top = '10px';
+                closeButton.style.right = '10px';
+                closeButton.style.zIndex = '10000';
+                closeButton.style.background = '#0CC400';
+                closeButton.style.color = 'white';
+                closeButton.style.border = 'none';
+                closeButton.style.borderRadius = '50%';
+                closeButton.style.width = '40px';
+                closeButton.style.height = '40px';
+                closeButton.style.fontSize = '20px';
+                closeButton.style.fontWeight = 'bold';
+                closeButton.style.cursor = 'pointer';
+                closeButton.style.boxShadow = '0 2px 5px rgba(0,0,0,0.3)';
+                
+                closeButton.addEventListener('click', () => {
+                  document.body.classList.remove('map-fullscreen-mode');
+                  document.body.style.overflow = '';
+                  mapDiv.style.position = mapDiv.dataset.originalPosition || '';
+                  mapDiv.style.top = '';
+                  mapDiv.style.left = '';
+                  mapDiv.style.width = '100%';
+                  mapDiv.style.height = mapDiv.dataset.originalHeight || '400px';
+                  mapDiv.style.zIndex = '';
+                  
+                  document.body.removeChild(closeButton);
+                  
+                  // Force resize to update map
+                  window.dispatchEvent(new Event('resize'));
+                  setTimeout(() => {
+                    if (mapInstance) {
+                      const center = mapInstance.getCenter();
+                      mapInstance.setCenter(center);
+                    }
+                  }, 100);
+                });
+                
+                document.body.appendChild(closeButton);
+              } else {
+                // Restore original styles
+                document.body.style.overflow = '';
+                mapDiv.style.position = mapDiv.dataset.originalPosition || '';
+                mapDiv.style.top = '';
+                mapDiv.style.left = '';
+                mapDiv.style.width = '100%';
+                mapDiv.style.height = mapDiv.dataset.originalHeight || '400px';
+                mapDiv.style.zIndex = '';
+                
+                // Remove close button if it exists
+                const closeButton = document.getElementById('exit-fullscreen-btn');
+                if (closeButton) {
+                  document.body.removeChild(closeButton);
+                }
+              }
+              
+              // Force resize to update map
+              window.dispatchEvent(new Event('resize'));
+              setTimeout(() => {
+                if (mapInstance) {
+                  const center = mapInstance.getCenter();
+                  mapInstance.setCenter(center);
+                }
+              }, 100);
+            }
+          } catch (error) {
+            console.error('Fullscreen error:', error);
+            alert('Fullscreen mode not supported in this browser.');
+          }
+        });
+        
+        // Position the button at the top right of the map
+        mapInstance.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(fullscreenControlDiv);
+      }
       
-      mapInstance.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(locationButton);
+      // Fix location button to ensure it appears on all platforms
+      console.log('Adding location button to map...');
+      const locationButtonDiv = document.createElement('div');
+      locationButtonDiv.className = 'custom-location-button';
+      locationButtonDiv.title = 'Show your location';
+      locationButtonDiv.innerHTML = `
+        <button style="
+          background: white;
+          border: 2px solid #0CC400;
+          border-radius: 4px;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+          cursor: pointer;
+          margin: 10px;
+          padding: 8px;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        ">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0CC400" stroke-width="2.5">
+            <circle cx="12" cy="12" r="8"></circle>
+            <circle cx="12" cy="12" r="3" fill="#0CC400"></circle>
+          </svg>
+        </button>
+      `;
       
-      // Add click event for location button
-      locationButton.addEventListener("click", () => {
-        // Try HTML5 geolocation
+      // Add click handler for the location button
+      locationButtonDiv.querySelector('button').addEventListener('click', () => {
+        console.log('Location button clicked');
         if (navigator.geolocation) {
-          setLoadingMessage('Getting your location...');
-          setIsLoading(true);
+          showLoadingMessage('Getting your location...');
           
           navigator.geolocation.getCurrentPosition(
             (position) => {
@@ -238,8 +546,13 @@ function RoutePlanner() {
                 lng: position.coords.longitude,
               };
               
-              // Add a marker for user's location
-              const userMarker = new window.google.maps.Marker({
+              console.log(`Location obtained: ${pos.lat}, ${pos.lng}`);
+              mapInstance.setCenter(pos);
+              mapInstance.setZoom(15); // Zoom in when location is found
+              showLoadingMessage('Location found!');
+              
+              // Add marker for user location
+              new window.google.maps.Marker({
                 position: pos,
                 map: mapInstance,
                 icon: {
@@ -253,25 +566,12 @@ function RoutePlanner() {
                 title: "Your Location"
               });
               
-              // Add a circle to show accuracy
-              const accuracyCircle = new window.google.maps.Circle({
-                map: mapInstance,
-                center: pos,
-                radius: position.coords.accuracy,
-                strokeColor: "#0CC400",
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: "#0CC400",
-                fillOpacity: 0.2
-              });
-              
-              mapInstance.setCenter(pos);
-              setIsLoading(false);
+              setTimeout(() => showLoadingMessage(''), 2000);
             },
             (error) => {
               console.error("Error getting location:", error);
-              setLoadingMessage(`Error getting location: ${error.message}`);
-              setTimeout(() => setIsLoading(false), 2000);
+              showLoadingMessage(`Error getting location: ${error.message}`);
+              setTimeout(() => showLoadingMessage(''), 3000);
             },
             {
               enableHighAccuracy: true,
@@ -280,12 +580,115 @@ function RoutePlanner() {
             }
           );
         } else {
-          setLoadingMessage("Geolocation is not supported by this browser.");
-          setTimeout(() => setIsLoading(false), 2000);
+          showLoadingMessage("Geolocation is not supported by this browser.");
+          setTimeout(() => showLoadingMessage(''), 3000);
         }
       });
       
-      // Try to get user location automatically on load
+      // Position the button at the right side of the map
+      // Use RIGHT_BOTTOM for better visibility
+      mapInstance.controls[window.google.maps.ControlPosition.RIGHT_BOTTOM].push(locationButtonDiv);
+      console.log('Location button added to map');
+      
+      // Add in-map fetch button
+      const mapFetchButtonDiv = document.createElement('div');
+      mapFetchButtonDiv.innerHTML = `
+        <button style="
+          background: #0CC400;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          padding: 8px 12px;
+          margin: 10px;
+          font-size: 14px;
+          font-weight: bold;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+          cursor: pointer;
+        ">
+          <span style="margin-right: 5px;">📡</span> Fetch WiGLE Data
+        </button>
+      `;
+      
+      // Add click handler for the fetch button
+      mapFetchButtonDiv.querySelector('button').addEventListener('click', () => {
+        // Special handling for Firefox
+        if (browserInfo.isFirefox) {
+          // Make sure map bounds are available
+          if (!mapInstance.getBounds()) {
+            setLoadingMessage('Map bounds not available yet. Please wait a moment and try again.');
+            
+            // Force map to recalculate bounds
+            const center = mapInstance.getCenter();
+            const currentZoom = mapInstance.getZoom();
+            mapInstance.setZoom(currentZoom - 1);
+            setTimeout(() => {
+              mapInstance.setZoom(currentZoom);
+              mapInstance.setCenter(center);
+              
+              // Try again after forcing bounds recalculation
+              setTimeout(() => {
+                if (mapInstance.getBounds()) {
+                  fetchWigleData();
+                } else {
+                  setLoadingMessage('Still unable to get map bounds. Please try refreshing the page.');
+                }
+              }, 500);
+            }, 300);
+            
+            return;
+          }
+        }
+        
+        // Call the main fetch function
+        fetchWigleData();
+      });
+      
+      // Position the button at the bottom left of the map
+      mapInstance.controls[window.google.maps.ControlPosition.BOTTOM_LEFT].push(mapFetchButtonDiv);
+      
+      // Special handling for Firefox
+      if (browserInfo.isFirefox) {
+        console.log("Firefox detected - using special initialization");
+        
+        // Force multiple resize events to ensure map renders properly
+        const forceResize = () => {
+          window.dispatchEvent(new Event('resize'));
+          if (mapInstance && mapInstance.getCenter) {
+            const center = mapInstance.getCenter();
+            mapInstance.setCenter(center);
+          }
+        };
+        
+        // Schedule multiple resize attempts
+        setTimeout(forceResize, 500);
+        setTimeout(forceResize, 1500);
+        setTimeout(forceResize, 3000);
+      }
+      
+      // Add event listener for when map is fully loaded
+      window.google.maps.event.addListenerOnce(mapInstance, 'idle', () => {
+        setIsLoading(false);
+        console.log('Map fully loaded and ready');
+        
+        // Hide loading message
+        setLoadingMessage('');
+        
+        // Force bounds calculation
+        if (mapInstance && !mapInstance.getBounds()) {
+          console.log('Forcing bounds calculation...');
+          const center = mapInstance.getCenter();
+          const currentZoom = mapInstance.getZoom();
+          
+          // Zoom in and out to force bounds calculation
+          mapInstance.setZoom(currentZoom - 1);
+          setTimeout(() => {
+            mapInstance.setZoom(currentZoom);
+            mapInstance.setCenter(center);
+          }, 200);
+        }
+      });
+      
+      // Try to get user location
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -294,8 +697,11 @@ function RoutePlanner() {
               lng: position.coords.longitude,
             };
             
-            // Add a marker for user's location
-            const userMarker = new window.google.maps.Marker({
+            console.log(`Location obtained: ${pos.lat}, ${pos.lng}`);
+            mapInstance.setCenter(pos);
+            
+            // Add marker for user location
+            new window.google.maps.Marker({
               position: pos,
               map: mapInstance,
               icon: {
@@ -309,48 +715,31 @@ function RoutePlanner() {
               title: "Your Location"
             });
             
-            mapInstance.setCenter(pos);
+            setIsLoading(false);
           },
           (error) => {
-            console.error("Error getting initial location:", error);
-            // Continue with default location if geolocation fails
+            console.error("Error getting location:", error);
+            setIsLoading(false);
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
           }
         );
-      }
-      
-      // Add event listener for when map is fully loaded
-      window.google.maps.event.addListenerOnce(mapInstance, 'idle', () => {
+      } else {
         setIsLoading(false);
-        console.log('Map fully loaded and ready');
-      });
-      
-      // Add detailed console logs for zoom level changes (without emojis)
-      mapInstance.addListener('zoom_changed', () => {
-        const currentZoom = mapInstance.getZoom();
-        console.log(`ZOOM CHANGED: Now at zoom level ${currentZoom}`);
-        console.log(`Map bounds: ${JSON.stringify(mapInstance.getBounds().toJSON())}`);
-        
-        // Log different messages based on zoom level ranges
-        if (currentZoom >= 18) {
-          console.log(`Building level detail (zoom ${currentZoom})`);
-        } else if (currentZoom >= 14) {
-          console.log(`Street level detail (zoom ${currentZoom})`);
-        } else if (currentZoom >= 10) {
-          console.log(`Neighborhood level (zoom ${currentZoom})`);
-        } else if (currentZoom >= 6) {
-          console.log(`City/region level (zoom ${currentZoom})`);
-        } else {
-          console.log(`Country/continent level (zoom ${currentZoom})`);
-        }
-        
-        if (window.heatmapLayer) {
-          window.updateHeatmapSettings();
-        }
-      });
+      }
       
     } catch (error) {
       console.error('Error initializing map:', error);
       setLoadingMessage('Error initializing map. Please refresh the page.');
+      setIsLoading(false);
+      
+      // Retry if we haven't exceeded max attempts
+      if (mapInitAttempts < MAX_MAP_INIT_ATTEMPTS) {
+        setTimeout(initMap, 2000);
+      }
     }
   };
   
@@ -494,19 +883,74 @@ function RoutePlanner() {
     return roadSegments;
   };
   
-  // Fetch WiGLE data for the current map bounds
+  // Improve geolocation handling for mobile browsers
+  const getUserLocation = () => {
+    if (!navigator.geolocation) {
+      setError('Geolocation is not supported by your browser');
+      return;
+    }
+    
+    // Options with longer timeout for mobile
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    };
+    
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        console.log(`Location obtained: ${latitude}, ${longitude}`);
+        
+        if (map) {
+          map.setCenter({ lat: latitude, lng: longitude });
+          map.setZoom(15);
+        }
+      },
+      (err) => {
+        console.error('Geolocation error:', err);
+        
+        let errorMessage = 'Failed to get your location. ';
+        
+        switch (err.code) {
+          case err.PERMISSION_DENIED:
+            errorMessage += 'You denied the request for location. Please enable location services in your browser settings.';
+            break;
+          case err.POSITION_UNAVAILABLE:
+            errorMessage += 'Location information is unavailable.';
+            break;
+          case err.TIMEOUT:
+            errorMessage += 'The request to get your location timed out.';
+            break;
+          default:
+            errorMessage += `Unknown error (${err.message}).`;
+        }
+        
+        setError(errorMessage);
+      },
+      options
+    );
+  };
+  
+  // Fix fetch WiGLE data for mobile browsers
   const fetchWigleData = async () => {
-    if (!map) {
+    console.log('fetchWigleData called');
+    
+    if (!map && !globalMapInstance) {
       setError('Map not initialized');
       return;
     }
     
-    if (!credentials.username || !credentials.apiToken) {
+    // Use either the React state or global reference
+    const mapToUse = map || globalMapInstance;
+    const credsToUse = credentials || globalCredentials;
+    
+    if (!credsToUse.username || !credsToUse.apiToken) {
       setError('Please enter your WiGLE API credentials');
       return;
     }
     
-    const bounds = map.getBounds();
+    const bounds = mapToUse.getBounds();
     if (!bounds) {
       setError('Map bounds not available');
       return;
@@ -515,33 +959,15 @@ function RoutePlanner() {
     const ne = bounds.getNorthEast();
     const sw = bounds.getSouthWest();
     
-    // Get current zoom level
-    const zoomLevel = map.getZoom();
-    console.log(`Current zoom level: ${zoomLevel}`);
-    
-    // Calculate approximate area in square kilometers
-    const latDiff = Math.abs(ne.lat() - sw.lat());
-    const lngDiff = Math.abs(ne.lng() - sw.lng());
-    const areaSqKm = latDiff * lngDiff * 111 * 111 * Math.cos(((ne.lat() + sw.lat()) / 2) * Math.PI / 180);
-    
-    console.log(`Approximate area: ${areaSqKm.toFixed(2)} sq km`);
-    
-    // Set limits based on zoom level
-    if (zoomLevel < 12 && areaSqKm > 100) {
-      setError('Please zoom in closer to fetch data. The current view is too large and may return too many results or timeout.');
-      return;
-    }
-    
     setIsLoading(true);
     setError(null);
     setLoadingMessage('Fetching WiGLE data...');
     
     try {
       // Create the Basic Authentication token
-      const authToken = btoa(`${credentials.username}:${credentials.apiToken}`);
+      const authToken = btoa(`${credsToUse.username}:${credsToUse.apiToken}`);
       
       // Build the query with all necessary parameters
-      // Remove any time-based filtering to get ALL data
       const queryParams = new URLSearchParams({
         onlymine: 'true',
         latrange1: sw.lat(),
@@ -551,16 +977,25 @@ function RoutePlanner() {
         searchWifi: 'true',
         searchBluetooth: 'true',
         searchCell: 'true',
-        resultsPerPage: 1000 // Request maximum results per page
+        resultsPerPage: 1000
       });
       
-      // First request to get total count and first page
+      // Log the request URL for debugging
+      console.log(`Fetching from: https://api.wigle.net/api/v2/network/search?${queryParams}`);
+      
+      // First request to get total count and first page - add credentials mode for mobile browsers
       const response = await fetch(`https://api.wigle.net/api/v2/network/search?${queryParams}`, {
         method: 'GET',
         headers: {
-          'Authorization': `Basic ${authToken}`
-        }
+          'Authorization': `Basic ${authToken}`,
+          'Accept': 'application/json'
+        },
+        // Add credentials mode for iOS browsers
+        credentials: 'same-origin'
       });
+      
+      // Log response status for debugging
+      console.log(`Response status: ${response.status}`);
       
       const data = await response.json();
       
@@ -591,8 +1026,10 @@ function RoutePlanner() {
             const pageResponse = await fetch(`https://api.wigle.net/api/v2/network/search?${queryParams}`, {
               method: 'GET',
               headers: {
-                'Authorization': `Basic ${authToken}`
-              }
+                'Authorization': `Basic ${authToken}`,
+                'Accept': 'application/json'
+              },
+              credentials: 'same-origin'
             });
             
             const pageData = await pageResponse.json();
@@ -645,7 +1082,7 @@ function RoutePlanner() {
       // Create heatmap layer with adjusted settings for better linear appearance
       window.heatmapLayer = new window.google.maps.visualization.HeatmapLayer({
         data: heatmapData,
-        map: map,
+        map: mapToUse,
         radius: 15, // Reduced from original 15
         opacity: 0.7, // Reduced from original 0.7
         maxIntensity: 8, // Adjusted for more color variation
@@ -663,9 +1100,9 @@ function RoutePlanner() {
       
       // Define the updateHeatmapSettings function
       window.updateHeatmapSettings = () => {
-        if (!map || !window.heatmapLayer) return;
+        if (!mapToUse || !window.heatmapLayer) return;
         
-        const zoom = map.getZoom();
+        const zoom = mapToUse.getZoom();
         console.log(`Zoom level: ${zoom}`);
         
         // Set explicit radius values for each zoom level
@@ -725,7 +1162,7 @@ function RoutePlanner() {
       };
       
       // Add zoom change listener to update heatmap settings
-      map.addListener('zoom_changed', () => {
+      mapToUse.addListener('zoom_changed', () => {
         window.updateHeatmapSettings();
       });
       
@@ -733,7 +1170,7 @@ function RoutePlanner() {
       allResults.forEach(network => {
         const marker = new window.google.maps.Marker({
           position: { lat: network.trilat, lng: network.trilong },
-          map: map,
+          map: mapToUse,
           icon: {
             path: window.google.maps.SymbolPath.CIRCLE,
             scale: 4, // Larger points
@@ -765,10 +1202,10 @@ function RoutePlanner() {
         <button id="toggle-points">Points</button>
       `;
       
-      map.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(visualizationControl);
+      mapToUse.controls[window.google.maps.ControlPosition.TOP_RIGHT].push(visualizationControl);
       
       document.getElementById('toggle-heatmap').addEventListener('click', () => {
-        window.heatmapLayer.setMap(map);
+        window.heatmapLayer.setMap(mapToUse);
         window.wigleMarkers.forEach(marker => marker.setVisible(false));
       });
       
@@ -784,7 +1221,7 @@ function RoutePlanner() {
       
     } catch (error) {
       console.error('Error fetching WiGLE data:', error);
-      setError(error.message);
+      setError(`Error: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -929,7 +1366,45 @@ function RoutePlanner() {
     });
   };
   
+  // Fix the undefined showLoadingMessage function
+
+  // Add this function definition before using it
+  const showLoadingMessage = (message) => {
+    // Update the state
+    setLoadingMessage(message);
+    
+    // Remove any existing fullscreen message
+    const existingMessage = document.querySelector('.fullscreen-loading-message');
+    if (existingMessage) {
+      document.body.removeChild(existingMessage);
+    }
+    
+    // If there's a message to show
+    if (message) {
+      // Create a new message element
+      const messageEl = document.createElement('div');
+      messageEl.className = 'fullscreen-loading-message';
+      messageEl.innerHTML = `
+        <div class="fullscreen-loading-spinner"></div>
+        <span>${message}</span>
+      `;
+      
+      // Add to the document
+      document.body.appendChild(messageEl);
+      
+      // Auto-hide after 5 seconds unless it's a persistent message
+      if (!message.includes('Error') && !message.includes('Please wait')) {
+        setTimeout(() => {
+          if (document.body.contains(messageEl)) {
+            document.body.removeChild(messageEl);
+          }
+        }, 5000);
+      }
+    }
+  };
+  
   return (
+    
     <div className="page-content route-planner">
       <h2>Route Planner</h2>
       <p>Create custom routes using WiGLE coverage data.</p>

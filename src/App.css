@@ -1,9 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap');
 
 :root {
   --bg-color: #000000;
   --card-bg: #000000;
-  --primary-color: #0CC400;
+  
   --secondary-color: #e0e0e0;
   --text-color: #e0e0e0;
   --border-color: #333;
@@ -14,12 +15,28 @@
   --border-radius-sm: 8px; /* Smaller border radius for inputs, buttons */
   --border-radius-lg: 16px; /* Larger border radius for main containers */
 }
-
-a {
-  color: var(--primary-color);
-  text-decoration: none;
+html {
+  font-family: 'Kode Mono', 'Space Mono', monospace;
 }
 
+a {
+  color: #0AC400;
+  margin: 0;
+}
+
+.gradient {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 20%, #dc2743 40%, #cc2366 60%, #bc1888 80%, #7b3fff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 100%;
+  animation: gradientShift 8s ease infinite;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+ 
+}
 
 a:hover {
   text-decoration: underline;
@@ -35,9 +52,11 @@ a:hover {
 body {
   min-height: 100vh;
   width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   background-color: var(--bg-color);
   color: var(--text-color);
-  font-family: 'Geist Mono', 'Space Mono', monospace;
+  font-family: 'Kode Mono', 'Space Mono', monospace;
   margin: 0;
   padding: 0;
   position: relative;
@@ -49,16 +68,17 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-
   align-items: center;
-  padding: 2rem;
+  padding: 0;
   box-sizing: border-box;
-  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 
 .container {
   width: 100%;
-  max-width: 1000px;
+  max-width: 1200px;
   background-color: transparent;
   border-radius: 0;
   box-shadow: none;
@@ -75,10 +95,17 @@ body {
   padding-right: 1rem;
 }
 
+.container > .nav-bar {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  left: auto !important;
+  right: auto !important;
+  position: sticky !important;
+}
+
 .App-header {
-  padding: 2rem;
-  text-align: center;
-  border-bottom: 1px solid var(--border-color);
+  display: none;
 }
 
 .header-text {
@@ -110,13 +137,27 @@ body {
 .credentials-section,
 .upload-section {
   padding: 1.5rem 2rem;
-  border-bottom: 1px solid var(--border-color);
+  
 }
 
 h2 {
-  color: var(--secondary-color);
+  color: #0AC400;
+  margin: 0;
+  font-family: inherit;
+  font-weight: inherit;
+  display: inline-block;
+  width: auto;
+  
   margin-bottom: 1rem;
   font-size: 1.4rem;
+  padding: 0.2rem 0;
+ 
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .input-group {
@@ -129,37 +170,45 @@ label {
   color: var(--text-color);
 }
 
+/* Global input styles that will apply to ALL inputs across the entire application */
 input {
   width: 100%;
   padding: 0.6rem 0.75rem;
-  background-color: var(--bg-color);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-sm);
-  color: var(--text-color);
-  font-family: 'Space Mono', monospace;
+  background-color: #000000;
+  border-radius: var(--border-radius-sm, 4px);
+  border: 1px solid #333;
+  color: var(--text-color, #fff);
+  font-family: 'Kode Mono', 'Space Mono', monospace;
   transition: all 0.2s ease;
 }
 
-input:focus {
+input:focus,
+input:hover {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(12, 196, 0, 0.2);
+  box-shadow: 0 0 10px #0AC400;
+  border: solid 1px #0AC400;
 }
 
+/* Update dropzone with glowing gradient border */
 .dropzone {
-  border: 2px dotted var(--primary-color);
+  border: solid 1px #0AC400;
   border-radius: var(--border-radius);
   padding: 1.5rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-bottom: 1rem;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: 0 0 5px #0AC400;
 }
 
 .dropzone:hover,
 .dropzone.active {
-  border-color: var(--primary-color);
-  background-color: rgba(0, 255, 157, 0.05);
+  
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: 0 0 10px #0AC400;
 }
 
 .supported-formats {
@@ -240,13 +289,23 @@ input:focus {
 .upload-btn {
   width: 100%;
   padding: 0.8rem 1rem;
-  background-color: var(--primary-color);
-  color: var(--bg-color);
-  border: none;
-  border-radius: var(--border-radius-sm);
-  font-weight: bold;
-  cursor: pointer;
-  font-family: 'Space Mono', monospace;
+  text-align: center;
+  font-family: "Kode Mono", monospace;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  align-items: center;
+  border-radius: 10px;
+  background: rgb(15, 15, 15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  color: #909090;
+  margin: 0;
+  transition: 1s ease all;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  position: relative;
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -255,9 +314,12 @@ input:focus {
 }
 
 .upload-btn:hover:not(:disabled) {
-  background-color: var(--primary-color); /* Keep the same green color */
-  filter: brightness(1.2) drop-shadow(0 0 8px var(--primary-color)); /* Brighten and add glow */
-  transform: translateY(-2px);
+  color: white;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 10px #0AC400;
+  cursor: pointer;
+  border: solid 1px #0AC400;
+  border-radius: 10px;
 }
 
 .upload-btn:disabled {
@@ -280,6 +342,28 @@ input:focus {
     transparent 100%
   );
   animation: btn-shine 1.5s infinite;
+}
+
+.upload-btn:before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230AC400'%3E%3Cpath d='M12 0L14.82 9.18L24 12L14.82 14.82L12 24L9.18 14.82L0 12L9.18 9.18z'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  align-items: center;
+  filter: drop-shadow(0 0 5px rgba(10, 196, 0, 0.7))
+         drop-shadow(0 0 10px rgba(10, 196, 0, 0.5))
+         drop-shadow(0 0 20px rgba(10, 196, 0, 0.3));
+  margin-right: 5px;
+}
+
+.primary-button:hover::before {
+  filter: drop-shadow(0 0 5px rgba(10, 196, 0, 0.9))
+         drop-shadow(0 0 10px rgba(10, 196, 0, 0.7))
+         drop-shadow(0 0 20px rgba(10, 196, 0, 0.5));
 }
 
 @keyframes btn-shine {
@@ -339,7 +423,13 @@ footer p {
 }
 
 footer a {
-  color: var(--primary-color);
+  color: #0AC400;
+  margin: 0;
+  font-family: inherit;
+  font-weight: inherit;
+  display: inline-block;
+  width: auto;
+  animation: gradientShift 8s ease infinite;
   text-decoration: none;
   word-wrap: break-word;
   word-break: break-word;
@@ -408,130 +498,120 @@ footer a:hover {
   background: var(--primary-color);
 }
 
-/* Navigation Bar */
+/* Completely redesign the navbar to eliminate deadspace */
 .nav-bar {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 0.75rem 1.5rem;
+  padding: 0 20px !important;
   background-color: var(--bg-color);
   border-bottom: 1px solid var(--border-color);
   width: 100%;
   margin: 0;
   box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.nav-left, .nav-right {
+/* Make nav container take full width */
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 2.5rem !important; /* Add horizontal padding instead of max-width */
+  box-sizing: border-box;
+}
+
+/* Push logo to far left */
+.nav-left {
   display: flex;
   align-items: center;
+  margin-right: auto;
+  padding-left: 20px;
+}
+
+/* Push nav buttons to far right */
+.nav-right {
+  display: flex;
+  align-items: center;
+  padding-right: 20px;
+  margin-left: auto;
+  gap: 1.5rem;
 }
 
 .home-link {
   display: flex;
   align-items: center;
-  justify-content: center;
   text-decoration: none;
+  cursor: pointer;
+}
+
+.site-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--text-color);
+  margin-left: 0.5rem;
 }
 
 .wifi-icon-container {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: visible; /* Important: Allow glow to extend beyond container */
+  margin: 0 8px;
 }
 
-.wifi-icon-fa {
-  font-size: 1.75rem;
-  color: var(--primary-color);
-  filter: drop-shadow(0 0 8px var(--primary-color));
-  animation: wifi-pulse 2s infinite;
+.gradient-wifi-icon {
+  position: relative;
+  z-index: 2;
+  filter: none; /* Remove filter from the SVG itself */
   transition: all 0.3s ease;
 }
 
-.home-link:hover .wifi-icon-fa {
-  animation: none;
-  opacity: 1;
-  transform: scale(1.1);
-  cursor: pointer;
-  filter: drop-shadow(0 0 10px var(--primary-color)) 
-         drop-shadow(0 0 15px var(--primary-color));
+.wifi-icon-fa {
+  font-size: 1.5rem;
 }
 
-.nav-right {
-  gap: 1rem;
-}
+
 
 .nav-button {
   background: none;
   border: none;
   color: var(--text-color);
-  font-family: 'Geist Mono', 'Space Mono', monospace;
+  font-family: 'Kode Mono', 'Space Mono', monospace;
   font-size: 0.9rem;
   cursor: pointer;
   padding: 0.5rem 0.75rem;
   border-radius: var(--border-radius-sm);
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   position: relative;
-  overflow: hidden;
 }
 
 .nav-button:hover {
-  color: var(--primary-color);
-  background-color: rgba(0, 255, 157, 0.05);
-  transform: translateY(-2px);
+  color:#0AC400;
+  margin: 0;
+ 
 }
 
 .nav-button.active {
-  color: var(--primary-color);
+  color:#0AC400;
+  margin: 0;
+
+ 
 }
 
-.nav-button.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 30px;
-  height: 3px;
-  background-color: var(--primary-color);
-  border-radius: 3px;
-  box-shadow: 0 0 8px rgba(0, 255, 157, 0.5);
-}
-
-/* Add a subtle glow effect on hover */
-.nav-button:hover::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(
-    circle at center,
-    rgba(0, 255, 157, 0.1) 0%,
-    transparent 70%
-  );
-  opacity: 0;
-  animation: nav-glow 0.5s forwards;
-}
-
-@keyframes nav-glow {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
 
 /* Page Content Styles */
 .page-content {
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--border-color);
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 2rem 1rem;
   width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto 0;
 }
 
 .page-content h2 {
@@ -562,6 +642,7 @@ footer a:hover {
 .tools-list {
   list-style: none;
   margin-left: 0;
+  margin-top: 2rem;
 }
 
 .tools-list li {
@@ -580,7 +661,7 @@ footer a:hover {
 .tools-list a {
   display: inline-block;
   margin-top: 1rem;
-  color: var(--primary-color);
+  color: #0AC400;
   text-decoration: none;
   font-weight: bold;
 }
@@ -607,7 +688,7 @@ footer a:hover {
 }
 
 .contact-info a {
-  color: var(--primary-color);
+  color: #0AC400;
   text-decoration: none;
 }
 
@@ -640,40 +721,42 @@ footer a:hover {
   margin: 0;
 }
 
-/* Responsive adjustments */
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .nav-left {
+    padding-left: 0.5rem;
+  }
+  
+  .nav-right {
+    padding-right: 0.5rem;
+    gap: 1rem;
+  }
+  
+  .nav-button {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.5rem;
+  }
+}
+
 @media (max-width: 600px) {
   .nav-bar {
     flex-direction: column;
-    padding: 0.5rem;
+    padding: 0.5rem 0;
   }
   
   .nav-left, .nav-right {
     width: 100%;
     justify-content: center;
     margin: 0.25rem 0;
+    padding: 0;
   }
   
   .nav-right {
     gap: 0.5rem;
   }
   
-  .nav-button {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.6rem;
-  }
-  
-  .nav-button.active::after {
-    width: 20px;
-    height: 2px;
-  }
-  
-  .header-text {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .wifi-icon-container {
-    margin-bottom: 0.5rem;
+  .site-title {
+    font-size: 1rem;
   }
 }
 
@@ -690,7 +773,7 @@ footer a:hover {
 
 .progress-bar {
   height: 100%;
-  background-color: var(--primary-color);
+  background-color: green;
   border-radius: var(--border-radius-sm);
   transition: width 0.3s ease;
   position: relative;
@@ -743,20 +826,50 @@ footer a:hover {
   margin-top: 0.5rem;
 }
 
-/* Upload icon - bigger and green */
+/* Update the upload icon to green with more subtle glow */
 .upload-icon {
-  font-size: 2rem; /* Increased from 2.5rem to 3.5rem */
-  color: var(--primary-color); /* Already green from your primary color */
-  margin-bottom: 1rem;
-  opacity: 0.9; /* Increased from 0.8 to 0.9 for better visibility */
+  font-size: 1.5rem;
+  margin: 3rem;
+  color: #0AC400;
+  margin-bottom: 3rem;
+  opacity: 0.9;
   transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 3px rgba(10, 196, 0, 0.3));
 }
 
 .dropzone:hover .upload-icon,
 .dropzone.active .upload-icon {
   opacity: 1;
   transform: translateY(-5px);
-  filter: drop-shadow(0 0 10px var(--primary-color)); /* Increased glow effect */
+  filter: drop-shadow(0 0 5px rgba(10, 196, 0, 0.4))
+         drop-shadow(0 0 8px rgba(10, 196, 0, 0.2));
+}
+
+/* Update the upload path SVG fill */
+.upload-path {
+  fill: #0AC400 !important; /* Force override any other styles */
+  stroke: #0AC400 !important; /* Ensure stroke is also green */
+  filter: drop-shadow(0 0 2px rgba(10, 196, 0, 0.4));
+  transition: all 0.3s ease;
+}
+
+.dropzone:hover .upload-path,
+.dropzone.active .upload-path {
+  filter: drop-shadow(0 0 3px rgba(10, 196, 0, 0.6))
+         drop-shadow(0 0 6px rgba(10, 196, 0, 0.4));
+}
+
+/* Override any other colors that might be applied */
+.upload-icon svg,
+.upload-icon svg path,
+.upload-icon svg rect,
+.upload-icon svg circle {
+  fill: #0AC400 !important;
+  stroke: #0AC400 !important;
 }
 
 @keyframes wifi-pulse {
@@ -824,23 +937,27 @@ footer a:hover {
   background-color: var(--bg-color);
   border-radius: 50%;
   transition: all 0.3s ease;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+  
 }
 
 /* Checked state */
 .remember-me input:checked + .toggle-switch .toggle-track {
-  background-color: var(--primary-color);
-  box-shadow: 0 0 8px var(--primary-color);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 8px #0AC400;
+  cursor: pointer;
+  border: solid 1px transparent;
+  border-radius: 10px;
+  color: #0AC400;
+  border: solid 1px #0AC400;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  
 }
 
 .remember-me input:checked + .toggle-switch .toggle-track:before {
   transform: translateX(20px);
 }
 
-/* Focus state */
-.remember-me input:focus + .toggle-switch .toggle-track {
-  box-shadow: 0 0 0 2px rgba(0, 255, 157, 0.2);
-}
 
 .remember-me label {
   cursor: pointer;
@@ -991,6 +1108,77 @@ footer a:hover {
   footer {
     padding: 0.5rem;
     font-size: 0.65rem;
+  }
+}
+
+/* Add space between navbar and content */
+.page-content {
+  padding: 2rem 1rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto 0;
+}
+
+/* Add space to specific sections that might appear directly below navbar */
+.credentials-section,
+.upload-section,
+.route-controls {
+  margin-top: 2rem;
+}
+
+/* Add space to h2 elements that might be the first element after navbar */
+h2:first-of-type {
+  margin-top: 1.5rem;
+}
+
+/* For the home page content */
+.header-text {
+  margin-top: 2rem;
+}
+
+/* For the tools page */
+.tools-list {
+  margin-top: 2rem;
+}
+
+/* For the route planner page */
+.route-planner > h2:first-child {
+  margin-top: 2rem;
+}
+
+/* For any content that might be directly below the navbar */
+.container > *:not(.nav-bar):first-of-type {
+  margin-top: 2rem;
+}
+
+
+.home-link:hover .gradient-wifi-icon {
+  transform: scale(1.1);
+}
+
+
+/* Only add this new CSS for the upload icon SVG */
+
+
+/* Pulsing WiFi icon with glow only */
+.wifi-icon-pulse {
+  animation: glow-pulse 2s infinite;
+  color: #0AC400;
+  font-size: 1.5rem;
+}
+
+@keyframes glow-pulse {
+  0% {
+    filter: drop-shadow(0 0 2px rgba(10, 196, 0, 0.7));
+  }
+  
+  50% {
+    filter: drop-shadow(0 0 8px rgba(10, 196, 0, 0.9))
+           drop-shadow(0 0 12px rgba(10, 196, 0, 0.7));
+  }
+  
+  100% {
+    filter: drop-shadow(0 0 2px rgba(10, 196, 0, 0.7));
   }
 }
 

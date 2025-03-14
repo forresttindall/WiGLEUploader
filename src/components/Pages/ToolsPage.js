@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import './ToolsPage.css';
 import html2canvas from 'html2canvas';
+import { Trophy, CalendarCheck, Info } from "phosphor-react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWifi } from '@fortawesome/free-solid-svg-icons';
+import '../../App.css';
 
 function ToolsPage() {
   const [credentials, setCredentials] = useState(() => {
@@ -16,8 +18,6 @@ function ToolsPage() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [activityData, setActivityData] = useState([]);
-  const calendarRef = useRef(null);
   const [showInstructions, setShowInstructions] = useState(false);
 
   const handleInputChange = (e) => {
@@ -66,7 +66,29 @@ function ToolsPage() {
       const userName = credentials.displayName || 
                       (typeof data.user === 'string' ? data.user : credentials.username);
       
-      const rank = data.rank || '?';
+      // Extract rank and monthRank, with fallbacks
+      let rank = '?';
+      let monthRank = '?';
+      
+      // Check for rank in various locations
+      if (typeof data.rank === 'number') {
+        rank = data.rank;
+      } else if (data.statistics && typeof data.statistics.rank === 'number') {
+        rank = data.statistics.rank;
+      } else if (data.user && typeof data.user.rank === 'number') {
+        rank = data.user.rank;
+      }
+      
+      // Check for monthRank in various locations
+      if (typeof data.monthRank === 'number') {
+        monthRank = data.monthRank;
+      } else if (data.statistics && typeof data.statistics.monthRank === 'number') {
+        monthRank = data.statistics.monthRank;
+      } else if (data.user && typeof data.user.monthRank === 'number') {
+        monthRank = data.user.monthRank;
+      }
+      
+      console.log(`Extracted rank: ${rank}, monthRank: ${monthRank}`);
       
       // Extract the discoveredWiFiGPS value
       let discoveredWiFi = 0;
@@ -102,13 +124,11 @@ function ToolsPage() {
       const userStats = {
         userName,
         rank,
+        monthRank,
         discoveredWiFi
       };
       
       setUserData(userStats);
-      
-      // Generate mock activity data (in a real app, you'd fetch this from WiGLE)
-      generateMockActivityData();
       
     } catch (error) {
       console.error('Error fetching user stats:', error);
@@ -118,373 +138,75 @@ function ToolsPage() {
     }
   };
 
-  const generateMockActivityData = () => {
-    // This would be replaced with actual API data in a production app
-    const today = new Date();
-    const oneYearAgo = new Date();
-    oneYearAgo.setFullYear(today.getFullYear() - 1);
-    
-    const days = [];
-    let currentDate = new Date(oneYearAgo);
-    
-    while (currentDate <= today) {
-      // Generate random upload data
-      const hasUpload = Math.random() > 0.7;
-      const uploadSize = hasUpload ? Math.floor(Math.random() * 1000) : 0;
-      
-      days.push({
-        date: new Date(currentDate),
-        count: uploadSize,
-        intensity: uploadSize > 0 ? Math.min(Math.floor(uploadSize / 100) + 1, 4) : 0
-      });
-      
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-    
-    setActivityData(days);
-  };
-
-  const downloadImage = async () => {
-    if (!calendarRef.current) return;
-    
-    try {
-      // Create a clone of the element
-      const clone = calendarRef.current.cloneNode(true);
-      document.body.appendChild(clone);
-      
-      // Style the clone for optimal capture
-      clone.style.position = 'absolute';
-      clone.style.left = '-9999px';
-      clone.style.width = '930px';
-      clone.style.maxWidth = 'none';
-      clone.style.padding = '40px';
-      clone.style.paddingTop = '0px';
-      clone.style.paddingBottom = '40px';
-      clone.style.marginTop = '0px';
-      clone.style.margin = '0';
-      clone.style.boxSizing = 'border-box';
-      
-      // Center the header elements on a single line
-      const header = clone.querySelector('.stats-header');
-      if (header) {
-        header.style.display = 'flex';
-        header.style.flexDirection = 'row';
-        header.style.alignItems = 'center';
-        header.style.justifyContent = 'center';
-        header.style.width = '100%';
-        header.style.padding = '0.5rem 0';
-        header.style.margin = '0';
-      }
-      
-      // Add 20px padding to the right of the icon
-      const homeLink = clone.querySelector('.home-link');
-      if (homeLink) {
-        homeLink.style.marginRight = '20px';
-      }
-      
-      // Adjust user info
-      const userInfo = clone.querySelector('.user-info');
-      if (userInfo) {
-        userInfo.style.display = 'flex';
-        userInfo.style.flexDirection = 'row';
-        userInfo.style.alignItems = 'center';
-        userInfo.style.width = 'auto';
-        userInfo.style.flex = '0 0 auto';
-        userInfo.style.padding = '0.5rem';
-        userInfo.style.margin = '0';
-      }
-      
-      // Adjust username
-      const username = userInfo ? userInfo.querySelector('h3') : null;
-      if (username) {
-        username.style.margin = '0 2rem 0 0';
-        username.style.whiteSpace = 'nowrap';
-        username.style.padding = '0';
-      }
-      
-      // Adjust stats highlights
-      const statsHighlights = clone.querySelector('.stats-highlights');
-      if (statsHighlights) {
-        statsHighlights.style.display = 'flex';
-        statsHighlights.style.flexDirection = 'row';
-        statsHighlights.style.alignItems = 'center';
-        statsHighlights.style.padding = '0';
-        statsHighlights.style.margin = '0';
-      }
-      
-      // Adjust stat boxes
-      const statBoxes = clone.querySelectorAll('.stat-box');
-      statBoxes.forEach(box => {
-        box.style.margin = '0 0.75rem';
-        box.style.padding = '0.4rem';
-      });
-      
-      // Center the calendar and remove excess padding
-      const calendar = clone.querySelector('.activity-calendar');
-      if (calendar) {
-        calendar.style.display = 'flex';
-        calendar.style.flexDirection = 'column';
-        calendar.style.alignItems = 'center';
-        calendar.style.width = '100%';
-        calendar.style.marginTop = '1rem';
-        calendar.style.padding = '0';
-      }
-      
-      // Force layout calculation
-      void clone.offsetWidth;
-      
-      // Capture the image
-      const canvas = await html2canvas(clone, {
-        backgroundColor: '#121212',
-        scale: 2,
-        logging: false,
-        useCORS: true,
-        allowTaint: true,
-        width: 930,
-        height: clone.offsetHeight
-      });
-      
-      // Remove the clone
-      document.body.removeChild(clone);
-      
-      // Get image data URL
-      const image = canvas.toDataURL('image/png', 1.0);
-      
-      // Handle mobile vs desktop download
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-      
-      if (isMobile) {
-        setShowInstructions(true);
-        const blob = dataURLtoBlob(image);
-        const blobUrl = URL.createObjectURL(blob);
-        
-        // For iOS devices
-        if (isIOS) {
-          // Create a full-screen viewer
-          const viewer = document.createElement('div');
-          viewer.style.position = 'fixed';
-          viewer.style.top = '0';
-          viewer.style.left = '0';
-          viewer.style.width = '100vw';
-          viewer.style.height = '100vh';
-          viewer.style.backgroundColor = '#121212';
-          viewer.style.zIndex = '9999';
-          viewer.style.overflow = 'auto';
-          viewer.style.display = 'flex';
-          viewer.style.flexDirection = 'column';
-          viewer.style.alignItems = 'center';
-          
-          // Add a close button
-          const closeBtn = document.createElement('button');
-          closeBtn.innerText = 'Close';
-          closeBtn.style.position = 'fixed';
-          closeBtn.style.top = '10px';
-          closeBtn.style.right = '10px';
-          closeBtn.style.padding = '8px 16px';
-          closeBtn.style.backgroundColor = '#333';
-          closeBtn.style.color = '#fff';
-          closeBtn.style.border = 'none';
-          closeBtn.style.borderRadius = '4px';
-          closeBtn.style.cursor = 'pointer';
-          closeBtn.style.zIndex = '10000';
-          closeBtn.onclick = () => {
-            document.body.removeChild(viewer);
-          };
-          
-          // Create a container for the image
-          const imgContainer = document.createElement('div');
-          imgContainer.style.width = '100%';
-          imgContainer.style.overflowX = 'auto';
-          imgContainer.style.overflowY = 'hidden';
-          imgContainer.style.WebkitOverflowScrolling = 'touch';
-          imgContainer.style.display = 'flex';
-          imgContainer.style.justifyContent = 'center';
-          imgContainer.style.alignItems = 'center';
-          
-          // Create the image
-          const img = document.createElement('img');
-          img.src = blobUrl;
-          img.style.width = 'auto';
-          img.style.height = 'auto';
-          img.style.maxHeight = '90vh';
-          img.style.display = 'block';
-          
-          // Add instructions
-          const instructions = document.createElement('p');
-          instructions.innerText = 'Press and hold on the image, then select "Save Image" to add it to your photos.';
-          instructions.style.color = '#fff';
-          instructions.style.textAlign = 'center';
-          instructions.style.padding = '10px';
-          instructions.style.margin = '10px 0';
-          instructions.style.width = '100%';
-          
-          // Assemble the viewer
-          imgContainer.appendChild(img);
-          viewer.appendChild(closeBtn);
-          viewer.appendChild(imgContainer);
-          viewer.appendChild(instructions);
-          document.body.appendChild(viewer);
-        } else {
-          // For Android - open in a new window
-          const newWindow = window.open();
-          newWindow.document.write(`
-            <html>
-              <head>
-                <title>WiGLE Stats Badge</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <style>
-                  body {
-                    margin: 0;
-                    padding: 0;
-                    background-color: #121212;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    min-height: 100vh;
-                    overflow-x: auto;
-                    -webkit-overflow-scrolling: touch;
-                  }
-                  .img-container {
-                    width: 100%;
-                    overflow-x: auto;
-                    overflow-y: hidden;
-                    -webkit-overflow-scrolling: touch;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                  }
-                  img {
-                    width: auto;
-                    height: auto;
-                    max-height: 90vh;
-                    display: block;
-                  }
-                  p {
-                    color: white;
-                    text-align: center;
-                    padding: 10px;
-                    margin: 10px 0;
-                    width: 100%;
-                  }
-                </style>
-              </head>
-              <body>
-                <div class="img-container">
-                  <img src="${blobUrl}" alt="WiGLE Stats Badge">
-                </div>
-                <p>Press and hold on the image, then select "Save Image" to add it to your photos.</p>
-              </body>
-            </html>
-          `);
-          newWindow.document.close();
-        }
-        
-        // Clean up the blob URL after a delay
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
-      } else {
-        // For desktop - use standard download
-        const link = document.createElement('a');
-        link.href = image;
-        link.download = `wigle-stats-${credentials.displayName || 'user'}.png`;
-        link.click();
-      }
-    } catch (error) {
-      console.error('Error generating image:', error);
-      setError('Failed to generate image');
-    }
-  };
-  
-  // Helper function to convert data URL to Blob
-  const dataURLtoBlob = (dataURL) => {
-    const arr = dataURL.split(',');
-    const mime = arr[0].match(/:(.*?);/)[1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-    
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    
-    return new Blob([u8arr], { type: mime });
-  };
-
   // Format number with commas
   const formatNumber = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
-  // Group activity data by month and week for the calendar
-  const getCalendarData = () => {
-    const months = [];
-    const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  // Fix the download function to handle null userName
+  const downloadBadgeImage = () => {
+    const badgeElement = document.querySelector('.wigle-digital-badge');
+    if (!badgeElement) return;
     
-    // Group by month
-    let currentMonth = -1;
-    let currentWeeks = [];
-    let currentWeek = [];
+    // Temporarily remove gradient text for screenshot
+    const userName = document.querySelector('.digital-badge-user h2');
     
-    activityData.forEach((day, index) => {
-      const month = day.date.getMonth();
-      const dayOfWeek = day.date.getDay();
+    // Check if userName exists before trying to access its style
+    if (userName) {
+      const originalStyle = userName.style.cssText;
       
-      // Start a new month
-      if (month !== currentMonth) {
-        if (currentMonth !== -1) {
-          // Add any remaining days to the last week
-          if (currentWeek.length > 0) {
-            currentWeeks.push(currentWeek);
-          }
-          
-          // Add the completed month
-          months.push({
-            name: monthLabels[currentMonth],
-            weeks: currentWeeks
-          });
-        }
+      // Apply solid color for screenshot
+      userName.style.background = 'none';
+      userName.style.webkitBackgroundClip = 'initial';
+      userName.style.webkitTextFillColor = '#0AC400';
+      
+      html2canvas(badgeElement, {
+        backgroundColor: null,
+        scale: 2, // Higher resolution
+        logging: false,
+        useCORS: true
+      }).then(canvas => {
+        // Restore original style
+        userName.style.cssText = originalStyle;
         
-        currentMonth = month;
-        currentWeeks = [];
-        currentWeek = Array(dayOfWeek).fill(null); // Pad the beginning of the week
-      }
-      
-      // Add the day to the current week
-      currentWeek.push(day);
-      
-      // Start a new week on Sunday or at the end of the data
-      if (dayOfWeek === 6 || index === activityData.length - 1) {
-        // Pad the end of the week if needed
-        if (dayOfWeek !== 6) {
-          currentWeek = [...currentWeek, ...Array(6 - dayOfWeek).fill(null)];
-        }
-        
-        currentWeeks.push(currentWeek);
-        currentWeek = [];
-      }
-    });
-    
-    // Add the last month
-    if (currentMonth !== -1) {
-      months.push({
-        name: monthLabels[currentMonth],
-        weeks: currentWeeks
+        // Create a download link
+        const link = document.createElement('a');
+        link.download = `wigle-stats-${userData?.userName || 'user'}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      }).catch(err => {
+        console.error('Error generating image:', err);
+        // Restore original style in case of error
+        userName.style.cssText = originalStyle;
+      });
+    } else {
+      // If userName element doesn't exist, just capture the badge without style changes
+      html2canvas(badgeElement, {
+        backgroundColor: null,
+        scale: 2,
+        logging: false,
+        useCORS: true
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `wigle-stats-${userData?.userName || 'user'}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      }).catch(err => {
+        console.error('Error generating image:', err);
       });
     }
-    
-    return months;
   };
 
   return (
-    <div className="page-content tools-page">
-      <div className="padding">
-      <h2>WiGLE Stats Badge Generator</h2>
-      <p>Create a shareable image showing your WiGLE contribution activity.</p>
-      </div>
-      <div className="stats-generator">
-        <div className="credentials-section">
-          <h3>Enter your WiGLE API credentials</h3>
-          <div className="input-group">
+    <div className="tools-page">
+      <h1>WiGLE Tools</h1>
+      
+      <div className="api-credentials">
+        <h2>WiGLE API Credentials</h2>
+        <p>Enter your WiGLE API credentials to access your statistics.</p>
+        
+        <div className="credentials-form">
+          <div className="form-group">
             <label htmlFor="username">API Name</label>
             <input
               type="text"
@@ -492,10 +214,11 @@ function ToolsPage() {
               name="username"
               value={credentials.username}
               onChange={handleInputChange}
-              placeholder="Your WiGLE API Name"
+              placeholder="Your WiGLE API name"
             />
           </div>
-          <div className="input-group">
+          
+          <div className="form-group">
             <label htmlFor="apiToken">API Token</label>
             <input
               type="password"
@@ -503,130 +226,118 @@ function ToolsPage() {
               name="apiToken"
               value={credentials.apiToken}
               onChange={handleInputChange}
-              placeholder="Your WiGLE API Token"
+              placeholder="Your WiGLE API token"
             />
           </div>
-          <div className="input-group">
-            <label htmlFor="displayName">Username</label>
+          
+          <div className="form-group">
+            <label htmlFor="displayName">Display Name (Optional)</label>
             <input
               type="text"
               id="displayName"
               name="displayName"
               value={credentials.displayName}
               onChange={handleInputChange}
-              placeholder="Name to display on the badge"
+              placeholder="Custom display name"
             />
           </div>
-          <button
+          
+          <button 
             className="fetch-button"
             onClick={fetchUserStats}
-            disabled={loading || (!credentials.username || !credentials.apiToken)}
+            disabled={loading}
           >
-            {loading ? 'Loading...' : 'Generate Stats'}
+            {loading ? 'Loading...' : 'Generate Badge'}
           </button>
+          
           {error && <div className="error-message">{error}</div>}
         </div>
-        
-        {userData && (
-          <div className="stats-preview">
-            <div className="stats-card" ref={calendarRef}>
-              <div className="stats-header">
-                <div className="home-link">
-                  <div className="wifi-icon-container">
-                    <FontAwesomeIcon icon={faWifi} className="wifi-icon-fa" />
-                  </div>
-                  <div className="wigle-text">WiGLE.net</div>
-                </div>
-                <div className="user-info">
-                  <h3>{userData.userName}</h3>
-                  <div className="stats-highlights">
-                    <div className="stat-box">
-                      <span className="stat-value">{formatNumber(userData.discoveredWiFi)}</span>
-                      <span className="stat-label">New WiFi Discovered</span>
-                    </div>
-                    <div className="stat-box">
-                      <span className="stat-value">#{userData.rank}</span>
-                      <span className="stat-label">Global Rank</span>
-                    </div>
-                  </div>
-                </div>
+      </div>
+      
+      {userData && (
+        <div className="tools-container">
+          <div className="wigle-digital-badge">
+            <div className="digital-badge-header">
+              <div className="digital-badge-logo">
+                <FontAwesomeIcon icon={faWifi} className="wifi-icon-large" />
+                <span>WiGLE.net</span>
               </div>
-              
-              <div className="activity-calendar">
-                <div className="calendar-container">
-                  <div className="day-labels">
-                    <span>Mon</span>
-                    <span>Wed</span>
-                    <span>Fri</span>
-                  </div>
-                  
-                  <div className="months-grid">
-                    {getCalendarData().map((month, monthIndex) => (
-                      <div key={monthIndex} className="month-column">
-                        <div className="month-label">{month.name}</div>
-                        <div className="weeks-container">
-                          {month.weeks.map((week, weekIndex) => (
-                            <div key={weekIndex} className="week-row">
-                              {week.map((day, dayIndex) => (
-                                <div 
-                                  key={dayIndex} 
-                                  className={`day-cell ${day ? `intensity-${day.intensity}` : 'empty'}`}
-                                  title={day ? `${day.date.toDateString()}: ${day.count} uploads` : ''}
-                                >
-                                </div>
-                              ))}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="intensity-legend">
-                  <span>Less</span>
-                  <div className="legend-cells">
-                    <div className="day-cell intensity-0"></div>
-                    <div className="day-cell intensity-1"></div>
-                    <div className="day-cell intensity-2"></div>
-                    <div className="day-cell intensity-3"></div>
-                    <div className="day-cell intensity-4"></div>
-                  </div>
-                  <span>More</span>
-                </div>
-              </div>
-              
-              <div className="stats-footer">
-                <p>WiGLEUploader.net • {new Date().toLocaleDateString()}</p>
+              <div className="digital-badge-user">
+                <h2>{userData?.userName || 'WiGLE User'}</h2>
               </div>
             </div>
             
-            <button 
-              className="download-button"
-              onClick={downloadImage}
-            >
-              Download Image
-            </button>
-            
-            {/* Enhanced mobile instructions */}
-            {showInstructions && (
-              <div className="mobile-save-instructions">
-                <h4>Save Your Badge</h4>
-                {/iPad|iPhone|iPod/.test(navigator.userAgent) ? (
-                  <p>
-                    On iOS: Tap and hold on the image that appears, then select "Save to Photos"
-                  </p>
-                ) : (
-                  <p>
-                    On Android: The download should start automatically. Check your notification bar or Downloads folder.
-                  </p>
-                )}
+            <div className="digital-badge-stats-container">
+              <div className="digital-badge-stat">
+                <div className="digital-badge-stat-icon">
+                  <FontAwesomeIcon icon={faWifi} size="2x" />
+                </div>
+                <div className="digital-badge-stat-content">
+                  <div className="digital-badge-stat-value">{formatNumber(userData?.discoveredWiFi || 0)}</div>
+                  <div className="digital-badge-stat-label">WiFi Networks</div>
+                </div>
               </div>
-            )}
+              
+              <div className="digital-badge-stat">
+                <div className="digital-badge-stat-icon">
+                  <Trophy size={40} weight="duotone" />
+                </div>
+                <div className="digital-badge-stat-content">
+                  <div className="digital-badge-stat-value">#{userData?.rank || '0'}</div>
+                  <div className="digital-badge-stat-label">Global Rank</div>
+                </div>
+              </div>
+              
+              <div className="digital-badge-stat">
+                <div className="digital-badge-stat-icon">
+                  <CalendarCheck size={40} weight="duotone" />
+                </div>
+                <div className="digital-badge-stat-content">
+                  <div className="digital-badge-stat-value">#{userData?.monthRank || '0'}</div>
+                  <div className="digital-badge-stat-label">Monthly Rank</div>
+                </div>
+              </div>
+            </div>
             
-            <p className="mobile-instructions">
-              After clicking Download, follow the on-screen instructions to save to your photos.
-            </p>
+            <div className="digital-badge-footer">
+              <div className="badge-date">Generated on {new Date().toLocaleDateString()}</div>
+              <div className="badge-site">WiGLEUploader.net</div>
+            </div>
+          </div>
+          
+          <button 
+            className="download-button" 
+            onClick={downloadBadgeImage}
+            disabled={!userData}
+          >
+            Download Badge Image
+          </button>
+        </div>
+      )}
+      
+      <div className="instructions-section">
+        <div className="instructions-header">
+          <h2>How to Get Your WiGLE API Credentials</h2>
+          <button 
+            className="info-icon-button"
+            onClick={() => setShowInstructions(!showInstructions)}
+            aria-label={showInstructions ? "Hide instructions" : "Show instructions"}
+          >
+            <Info size={24} weight="bold" />
+          </button>
+        </div>
+        
+        {showInstructions && (
+          <div className="instructions">
+            <ol>
+              <li>Log in to your WiGLE account at <a href="https://wigle.net" target="_blank" rel="noopener noreferrer">wigle.net</a></li>
+              <li>Click on "Account" in the top navigation menu</li>
+              <li>Scroll down to the "API" section</li>
+              <li>Copy your API Name and API Token</li>
+              <li>Paste them into the form above</li>
+              <li>Optionally, enter a custom display name if you want something different than your WiGLE username</li>
+            </ol>
+            <p><strong>Note:</strong> Your API credentials are stored locally in your browser and are never sent to our servers.</p>
           </div>
         )}
       </div>

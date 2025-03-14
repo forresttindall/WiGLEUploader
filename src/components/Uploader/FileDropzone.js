@@ -1,7 +1,5 @@
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 
 // Define accepted file extensions and types
 const ACCEPTED_EXTENSIONS = [
@@ -68,7 +66,35 @@ function FileDropzone({ onDrop, setUploadStatus }) {
     <div {...getRootProps()} className={`dropzone ${isDragActive ? 'active' : ''}`}>
       <input {...getInputProps()} />
       <div className="dropzone-content">
-        <FontAwesomeIcon icon={faCloudUploadAlt} className="upload-icon" />
+        <div className="upload-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" style={{ overflow: 'visible' }}>
+            <defs>
+              <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+                <feFlood floodColor="#e64c77" floodOpacity="0.5" result="glowColor"/>
+                <feComposite in="glowColor" in2="coloredBlur" operator="in" result="softGlow"/>
+                <feMerge>
+                  <feMergeNode in="softGlow"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+              <linearGradient id="uploadGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#f09433" />
+                <stop offset="20%" stopColor="#e6683c" />
+                <stop offset="40%" stopColor="#dc2743" />
+                <stop offset="60%" stopColor="#cc2366" />
+                <stop offset="80%" stopColor="#bc1888" />
+                <stop offset="100%" stopColor="#7b3fff" />
+              </linearGradient>
+            </defs>
+            <path 
+              d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"
+              fill="url(#uploadGradient)"
+              filter="url(#glow)"
+              className="upload-path"
+            />
+          </svg>
+        </div>
         {
           isDragActive ?
             <p>Drop the files here...</p> :

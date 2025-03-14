@@ -8,6 +8,7 @@ import UploaderSection from './components/Uploader/UploaderSection';
 import AboutPage from './components/Pages/AboutPage';
 import ToolsPage from './components/Pages/ToolsPage';
 import ContactPage from './components/Pages/ContactPage';
+import RoutePlanner from './RoutePlanner';
 
 function App() {
   const [activePage, setActivePage] = useState('home');
@@ -20,54 +21,46 @@ function App() {
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState(null);
 
-  // Load saved credentials on initial render
+  // Load saved credentials from localStorage
   useEffect(() => {
-    const savedCredentials = localStorage.getItem('wigleApiCredentials');
+    const savedCredentials = localStorage.getItem('credentials');
     if (savedCredentials) {
-      try {
-        const parsedCredentials = JSON.parse(savedCredentials);
-        setCredentials({
-          username: parsedCredentials.username || '',
-          password: parsedCredentials.password || '',
-          rememberMe: true
-        });
-      } catch (error) {
-        console.error('Error parsing saved API credentials:', error);
-      }
+      setCredentials(JSON.parse(savedCredentials));
+    }
+  }, []);
+
+  // Add this useEffect to load Google Maps API properly
+  useEffect(() => {
+    // Load Google Maps API with your key
+    const loadGoogleMapsAPI = () => {
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyC39qFGmCOo3FSV2AAYJMoR-OtspiPjkuU&libraries=visualization&callback=initMap&loading=async`;
+      script.async = true;
+      script.defer = true;
+      
+      // Define the callback function
+      window.initMap = function() {
+        // Maps API loaded
+        console.log("Google Maps API loaded successfully");
+      };
+      
+      document.head.appendChild(script);
+    };
+    
+    // Check if API is already loaded
+    if (!window.google || !window.google.maps) {
+      loadGoogleMapsAPI();
     }
   }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    const newValue = type === 'checkbox' ? checked : value;
+    const inputValue = type === 'checkbox' ? checked : value;
     
     setCredentials(prev => ({
       ...prev,
-      [name]: newValue
+      [name]: inputValue
     }));
-    
-    // If remember me is checked, save credentials to localStorage
-    // If unchecked, remove saved credentials
-    if (name === 'rememberMe') {
-      if (checked) {
-        localStorage.setItem('wigleApiCredentials', JSON.stringify({
-          username: credentials.username,
-          password: credentials.password
-        }));
-      } else {
-        localStorage.removeItem('wigleApiCredentials');
-      }
-    } else if (credentials.rememberMe) {
-      // Update saved credentials when they change and remember me is checked
-      localStorage.setItem('wigleApiCredentials', JSON.stringify({
-        ...credentials,
-        [name]: newValue
-      }));
-    }
-  };
-
-  const removeFile = (index) => {
-    setFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
   };
 
   const handleUpload = async () => {
@@ -211,6 +204,10 @@ function App() {
     }
   };
 
+  const removeFile = (index) => {
+    setFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
   return (
     <div className="App">
       <div className="container">
@@ -238,6 +235,7 @@ function App() {
         {activePage === 'about' && <AboutPage />}
         {activePage === 'tools' && <ToolsPage />}
         {activePage === 'contact' && <ContactPage />}
+        {activePage === 'route-planner' && <RoutePlanner />}
         
         <Footer />
       </div>

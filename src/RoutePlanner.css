@@ -1,0 +1,364 @@
+@import url('https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap');
+
+html {
+  font-family: 'Kode Mono', 'Space Mono', monospace;
+}
+
+.route-planner {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.map-container-wrapper {
+  width: 100% !important;
+  position: relative;
+  margin: 1rem 0;
+  padding: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.map-container {
+  width: 100%;
+  height: 70vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.credentials-section {
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.route-controls {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+
+.route-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.deep-links {
+  margin: 1.5rem 0;
+}
+
+.links-container {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.deep-link-button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: #0CC400;
+  color: #000;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.deep-link-button:hover {
+  background-color: #0ae600;
+  text-decoration: none;
+}
+
+.error-message {
+  color: #ff4d4d;
+  margin-bottom: 1rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .map-container {
+    height: 60vh;
+  }
+  
+  .route-controls {
+    justify-content: center;
+  }
+  
+  .links-container {
+    justify-content: center;
+  }
+  
+  .deep-link-button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-container {
+    height: 50vh;
+  }
+}
+
+/* Add this to your RoutePlanner.css file */
+.gm-style-cc,
+.gmnoprint a, .gmnoprint span, .gm-style-cc {
+  display: none;
+}
+.gmnoprint div {
+  background: none !important;
+}
+
+/* Add styles for the loading overlay */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  z-index: 10;
+  text-align: center;
+  padding: 1rem;
+}
+
+.loading-spinner {
+  border: 5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 5px solid #0CC400;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Override App.css constraints only for the route planner page */
+.App .container .page-content.route-planner {
+  max-width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Make sure we don't affect the navbar */
+.nav-bar {
+  /* Restore any navbar styles that might have been overridden */
+  width: auto !important;
+  max-width: none !important;
+  padding: inherit !important;
+  margin: inherit !important;
+}
+
+/* Add padding only to the content sections, not the map */
+.route-planner h2,
+.route-planner p,
+.route-planner .credentials-section,
+.route-planner .route-controls,
+.route-planner .deep-links {
+  padding-left: 20px;
+  padding-right: 20px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+/* Fix visualization control positioning and appearance */
+.visualization-control {
+  margin: 10px;
+  background-color: transparent !important; /* Remove white background */
+  border-radius: 4px;
+  box-shadow: none !important; /* Remove shadow */
+  overflow: visible;
+  display: flex;
+  position: absolute;
+  top: 10px;
+  left: 60px; /* Position next to My Location button */
+  z-index: 5;
+}
+
+.visualization-control button {
+  margin-right: 10px !important;
+  border-right: none !important; /* Remove divider */
+  padding: 8px 12px !important;
+  height: auto !important; /* Allow natural height */
+  min-width: auto !important; /* Allow natural width */
+}
+
+/* Remove any search bar or unwanted elements */
+.gm-style .gm-style-mtc,
+.gm-style .gm-svpc,
+.gm-style .gm-style-iw-c {
+  display: none !important;
+}
+
+/* Ensure Google Maps controls don't interfere */
+.gm-style-cc,
+.gmnoprint a, 
+.gmnoprint span, 
+.gm-style-cc {
+  display: none !important;
+}
+
+.gmnoprint div {
+  background: none !important;
+}
+
+/* Position My Location button properly */
+.my-location-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 5;
+  height: auto !important;
+  min-width: auto !important;
+  padding: 8px 12px !important;
+}
+
+/* Reset button styling to fix positioning issues */
+.route-planner button,
+.credentials-section button,
+.route-controls button,
+.visualization-control button,
+.fetch-button, .download-button {
+  /* Only change appearance, not layout */
+  font-family: "Kode Mono", monospace !important;
+  text-transform: uppercase !important;
+  font-size: 0.9rem !important;
+  color: #909090 !important;
+  background: rgba(30, 30, 30, 0.8) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 5px 40px rgba(101, 93, 255, 0.15) !important;
+  transition: 1s ease all !important;
+  
+  /* DO NOT change these properties */
+  /* Keep original display, position, and alignment */
+}
+
+/* Update button hover styles to use green glow instead of gradient */
+.route-planner button:hover:not(:disabled),
+.credentials-section button:hover:not(:disabled),
+.route-controls button:hover:not(:disabled),
+.visualization-control button:hover:not(:disabled),
+.fetch-button:hover, .download-button:hover {
+  transform: scale(1.08) !important;
+  color: white !important;
+  background: rgba(35, 35, 35, 0.9) !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 0 0 10px #0AC400 !important;
+  cursor: pointer !important;
+  border: solid 1px #0AC400 !important;
+  border-radius: 10px !important;
+  /* Remove gradient background */
+  background-image: none !important;
+}
+
+.route-planner button:disabled,
+.credentials-section button:disabled,
+.route-controls button:disabled,
+.visualization-control button:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* Remove stars from visualization control buttons */
+.visualization-control button::before {
+  content: none !important; /* Remove the star */
+}
+
+/* Update star icon color */
+.route-button:not(:disabled)::before,
+.deep-link-button:not(:disabled)::before {
+  content: '' !important;
+  display: inline-block !important;
+  width: 16px !important;
+  height: 16px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230AC400'%3E%3Cpath d='M12 0L14.82 9.18L24 12L14.82 14.82L12 24L9.18 14.82L0 12L9.18 9.18z'/%3E%3C/svg%3E") !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  filter: drop-shadow(0 0 5px rgba(10, 196, 0, 0.7))
+         drop-shadow(0 0 10px rgba(10, 196, 0, 0.5))
+         drop-shadow(0 0 20px rgba(10, 196, 0, 0.3)) !important;
+  margin-right: 5px !important;
+}
+
+/* Override for active visualization buttons */
+.visualization-control button.active {
+  background: rgba(35, 35, 35, 0.9) !important;
+  color: white !important;
+  border: solid 1px #0AC400 !important;
+  box-shadow: 0 0 10px #0AC400 !important;
+}
+
+/* Restore original button positioning */
+.route-controls {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+/* Add gradient text for WiGLE API credentials heading */
+.credentials-section h3 {
+  color: var(--text-color);
+  padding-bottom: 2rem;
+  padding-top: 3rem;
+}
+
+.instructions {
+    padding: 0 2rem;
+       
+}
+
+.instructions ol {
+    text-decoration: none;
+    list-style-type: none;
+
+}
+
+.instructions h3 {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 20%, #dc2743 40%, #cc2366 60%, #bc1888 80%, #7b3fff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% auto;
+    margin: 0;
+    font-family: inherit;
+    font-weight: inherit;
+    display: inline-block;
+    width: auto;
+    animation: gradientShift 8s ease infinite;
+  padding-bottom: 2rem;
+  padding-top: 3rem;
+}
+
+/* Add the gradient shift animation if it doesn't exist */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

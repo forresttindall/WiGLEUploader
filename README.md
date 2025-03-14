@@ -36,6 +36,8 @@ Use WigleUploader directly from your browser without installation! The web appli
 - **Secure Authentication**: Simple and secure WiGLE account authentication
 - **Retro-Modern UI**: Sleek dark mode interface with a retro computer aesthetic
 - **Responsive Design**: Works on desktop and mobile devices
+- **Image Stats Generator**: Create shareable images with your wardriving statistics
+- **Heatmap Route Planner**: Visualize your wardriving data with an interactive heatmap
 
 ## 📸 Screenshots
 
@@ -45,6 +47,24 @@ Use WigleUploader directly from your browser without installation! The web appli
 ## 🌐 API Integration
 
 WigleUploader integrates with the WiGLE API to upload wardriving files. You'll need a WiGLE account to use this application. [Register at WiGLE.net](https://wigle.net/register) if you don't have an account.
+
+## 🗺️ Heatmap Route Planner
+
+The Route Planner feature allows you to:
+- Visualize your wardriving data as an interactive heatmap
+- See where you've been and identify areas you haven't covered
+- Plan efficient routes for future wardriving sessions
+- Toggle between map views with a custom dark mode style
+- Use your current location to start planning from where you are
+
+## 📊 Image Stats Generator
+
+Create beautiful, shareable images with your wardriving statistics:
+- Total networks discovered
+- Breakdown by network type
+- Personalized with your WiGLE username
+- Perfect for social media sharing
+- Custom styling options
 
 ## 🤝 Contributing
 
@@ -56,9 +76,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgements
 
@@ -66,6 +83,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [React](https://reactjs.org/) for the UI library
 - [react-dropzone](https://react-dropzone.js.org/) for the file upload functionality
 - [Geist Mono](https://vercel.com/font) for the beautiful monospace font
+- [Google Maps API](https://developers.google.com/maps) for the mapping functionality
 
 ## 📬 Contact
 
@@ -73,11 +91,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Project Repository: [https://github.com/forresttindall/WiGLEUploader](https://github.com/forresttindall/WiGLEUploader)
 - Email: [contact@4est.io](mailto:forrest.tindall@gmail.com)
 
-## 🔮 Future Plans
-    
-- [ ] Add user statistics badge generator
-- [ ] Want to see something? Contact me!
 
 ---
 
-<p align="center">Made with ❤️ for the wardriving community</p>
+<p align="center">Made with 👹 for the wardriving community</p>

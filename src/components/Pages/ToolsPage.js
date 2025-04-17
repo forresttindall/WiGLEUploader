@@ -20,6 +20,8 @@ function ToolsPage() {
   const [error, setError] = useState(null);
   const [showInstructions, setShowInstructions] = useState(false);
 
+  const badgeRef = useRef(null);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCredentials(prev => {
@@ -143,57 +145,130 @@ function ToolsPage() {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
-  // Fix the download function to handle null userName
-  const downloadBadgeImage = () => {
-    const badgeElement = document.querySelector('.wigle-digital-badge');
+  // Update the downloadBadgeImage function
+  const downloadBadgeImage = async () => {
+    const badgeElement = badgeRef.current;
     if (!badgeElement) return;
-    
-    // Temporarily remove gradient text for screenshot
-    const userName = document.querySelector('.digital-badge-user h2');
-    
-    // Check if userName exists before trying to access its style
-    if (userName) {
-      const originalStyle = userName.style.cssText;
-      
-      // Apply solid color for screenshot
-      userName.style.background = 'none';
-      userName.style.webkitBackgroundClip = 'initial';
-      userName.style.webkitTextFillColor = '#0AC400';
-      
-      html2canvas(badgeElement, {
+
+    // Wait for web fonts to load
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready;
+    }
+
+    // Optionally, scroll into view
+    badgeElement.scrollIntoView({ behavior: "auto", block: "center" });
+
+    // Hide SVG icons, show emoji fallback (if you add them in your JSX)
+    badgeElement.classList.add('screenshot-mode');
+
+    try {
+      const canvas = await html2canvas(badgeElement, {
         backgroundColor: null,
-        scale: 2, // Higher resolution
-        logging: false,
-        useCORS: true
-      }).then(canvas => {
-        // Restore original style
-        userName.style.cssText = originalStyle;
-        
-        // Create a download link
-        const link = document.createElement('a');
-        link.download = `wigle-stats-${userData?.userName || 'user'}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      }).catch(err => {
-        console.error('Error generating image:', err);
-        // Restore original style in case of error
-        userName.style.cssText = originalStyle;
-      });
-    } else {
-      // If userName element doesn't exist, just capture the badge without style changes
-      html2canvas(badgeElement, {
-        backgroundColor: null,
+        useCORS: true,
         scale: 2,
         logging: false,
-        useCORS: true
-      }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `wigle-stats-${userData?.userName || 'user'}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      }).catch(err => {
-        console.error('Error generating image:', err);
+        removeContainer: true,
+        windowWidth: badgeElement.scrollWidth,
+        windowHeight: badgeElement.scrollHeight,
       });
+
+      // Remove screenshot mode
+      badgeElement.classList.remove('screenshot-mode');
+
+      // Check if running on iOS
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      
+      try {
+        // Temporarily remove gradient text for screenshot
+        const userName = document.querySelector('.digital-badge-user h2');
+        const originalStyle = userName ? userName.style.cssText : '';
+        
+        if (userName) {
+          userName.style.background = 'none';
+          userName.style.webkitBackgroundClip = 'initial';
+          userName.style.webkitTextFillColor = '#0AC400';
+        }
+
+        // Restore original style
+        if (userName) {
+          userName.style.cssText = originalStyle;
+        }
+
+        if (isIOS) {
+          // For iOS, use the native share functionality
+          canvas.toBlob(async (blob) => {
+            try {
+              // Try native share first
+              const file = new File([blob], `wigle-stats-${userData?.userName || 'user'}.png`, { 
+                type: 'image/png',
+                lastModified: new Date().getTime()
+              });
+
+              if (navigator.share && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                  files: [file],
+                  title: 'WiGLE Stats Badge',
+                  text: 'Check out my WiGLE statistics!'
+                });
+              } else {
+                // Fallback for older iOS versions
+                const blobUrl = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = `wigle-stats-${userData?.userName || 'user'}.png`;
+                link.click();
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+              }
+            } catch (error) {
+              console.error('Error sharing:', error);
+              // Final fallback - open in new window
+              const blobUrl = URL.createObjectURL(blob);
+              window.open(blobUrl);
+              setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+            }
+          }, 'image/png', 1.0);
+        } else {
+          // For Android and other devices
+          canvas.toBlob(async (blob) => {
+            try {
+              // Try native share on Android
+              const file = new File([blob], `wigle-stats-${userData?.userName || 'user'}.png`, { 
+                type: 'image/png',
+                lastModified: new Date().getTime()
+              });
+
+              if (navigator.share && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                  files: [file],
+                  title: 'WiGLE Stats Badge',
+                  text: 'Check out my WiGLE statistics!'
+                });
+              } else {
+                // Fallback to direct download
+                const blobUrl = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = `wigle-stats-${userData?.userName || 'user'}.png`;
+                link.href = blobUrl;
+                link.click();
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+              }
+            } catch (error) {
+              console.error('Error sharing:', error);
+              // Fallback to direct download
+              const link = document.createElement('a');
+              link.download = `wigle-stats-${userData?.userName || 'user'}.png`;
+              link.href = canvas.toDataURL('image/png');
+              link.click();
+            }
+          }, 'image/png', 1.0);
+        }
+      } catch (error) {
+        console.error('Error generating image:', error);
+        alert('There was an error generating the image. Please try again.');
+      }
+    } catch (error) {
+      badgeElement.classList.remove('screenshot-mode');
+      alert('There was an error generating the image. Please try again.');
     }
   };
 
@@ -256,7 +331,7 @@ function ToolsPage() {
       
       {userData && (
         <div className="tools-container">
-          <div className="wigle-digital-badge">
+          <div className="wigle-digital-badge" ref={badgeRef}>
             <div className="digital-badge-header">
               <div className="digital-badge-logo">
                 <FontAwesomeIcon icon={faWifi} className="wifi-icon-large" />
@@ -304,6 +379,7 @@ function ToolsPage() {
               <div className="badge-site">WiGLEUploader.net</div>
             </div>
           </div>
+          
           
           <button 
             className="download-button" 

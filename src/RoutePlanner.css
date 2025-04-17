@@ -362,3 +362,88 @@ html {
     background-position: 0% 50%;
   }
 }
+
+/* Location button styles */
+.my-location-button {
+  background: rgba(30, 30, 30, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 8px !important;
+  color: #fff !important;
+  cursor: pointer !important;
+  margin: 10px !important;
+  padding: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.my-location-button:hover {
+  background: rgba(35, 35, 35, 0.95) !important;
+  border-color: #0AC400 !important;
+  box-shadow: 0 0 10px #0AC400 !important;
+}
+
+.my-location-button svg {
+  stroke: #0AC400;
+}
+
+/* Location messages */
+.location-loading,
+.location-error {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 16px;
+  margin: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  max-width: 80%;
+  text-align: center;
+}
+
+.location-error {
+  background: rgba(255, 0, 0, 0.8);
+}
+
+/* iOS-specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .my-location-button {
+    /* Prevent double-tap zoom on iOS */
+    touch-action: manipulation;
+  }
+  
+  /* Fix iOS Safari button appearance */
+  .my-location-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+}
+
+/* Ensure button works on Firefox mobile */
+@-moz-document url-prefix() {
+  .my-location-button {
+    width: auto !important;
+    height: auto !important;
+  }
+}
+
+.fetch-data-button {
+  background: rgba(18, 18, 18, 0.9) !important;
+  border: 1px solid rgba(10, 196, 0, 0.3) !important;
+  border-radius: 8px !important;
+  padding: 8px 16px !important;
+  margin: 10px !important;
+  color: white !important;
+  cursor: pointer !important;
+  font-family: 'Kode Mono', 'Space Mono', monospace !important;
+  transition: all 0.3s ease !important;
+}
+
+.fetch-data-button:hover {
+  background: rgba(25, 25, 25, 0.95) !important;
+  border-color: #0AC400 !important;
+  box-shadow: 0 0 10px rgba(10, 196, 0, 0.5) !important;
+  transform: scale(1.05) !important;
+}

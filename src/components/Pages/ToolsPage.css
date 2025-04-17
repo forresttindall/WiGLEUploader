@@ -674,159 +674,155 @@ h2 {
   box-shadow: 0 0 10px #0AC400;
 }
 
-/* Digital Badge Styles */
+/* Digital Badge Styles - Bigger text */
 .wigle-digital-badge {
   background: #121212;
-  border-radius: 12px;
-  padding: 1.25rem 1.5rem;
+  border-radius: 8px;
+  padding: 0.4rem 1.25rem;
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(10, 196, 0, 0.3);
   min-width: 600px;
+  display: flex;
+  flex-direction: column;
 }
 
 .digital-badge-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 0.75rem;
+  margin-bottom: 0.2rem;
+  padding-bottom: 0.2rem;
 }
 
 .digital-badge-logo {
-  display: flex;
-  align-items: center;
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #0AC400;
+  font-size: 1.2rem;
+  opacity: 0.9;
 }
 
 .wifi-icon-large {
-  margin-right: 0.5rem;
-  color: #0AC400;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  margin-right: 0.3rem;
+  color: #0AC400 !important;
 }
 
 .digital-badge-user h2 {
-  margin: 0;
   font-size: 1.8rem;
-  background: linear-gradient(90deg, #0AC400, #00FF41);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-align: right;
+  margin: 0;
+  line-height: 1;
 }
 
 .digital-badge-stats-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1.25rem;
+  margin: 0.2rem 0;
+  align-items: center;
 }
 
 .digital-badge-stat {
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  padding: 0.7rem 0.8rem;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  flex: 1;
 }
 
 .digital-badge-stat-icon {
-  margin-right: 0.8rem;
+  margin-right: 0.4rem;
   color: #0AC400;
   display: flex;
   align-items: center;
-  justify-content: center;
+  opacity: 0.9;
+}
+
+.digital-badge-stat-icon svg {
+  width: 22px !important;
+  height: 22px !important;
 }
 
 .digital-badge-stat-content {
   display: flex;
   flex-direction: column;
+  gap: 0;
 }
 
 .digital-badge-stat-value {
-  font-size: 1.3rem;
+  font-size: 1.6rem;
+  line-height: 1;
   font-weight: bold;
-  color: #fff;
-  margin-bottom: 0.2rem;
 }
 
 .digital-badge-stat-label {
+  font-size: 0.9rem;
   color: #999;
-  font-size: 0.8rem;
+  line-height: 1;
+  opacity: 0.9;
 }
 
 .digital-badge-footer {
   display: flex;
   justify-content: space-between;
   color: #666;
-  font-size: 0.8rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 0.75rem;
+  font-size: 0.7rem;
+  padding-top: 0.2rem;
+  margin-top: 0.2rem;
+  opacity: 0.7;
 }
 
-/* Download button specific to badge */
-.download-button {
-  display: block;
-  margin: 1.5rem auto;
-  padding: 0.75rem 1.5rem;
-  background-color: #333;
-  color: white;
-  border: 1px solid #0AC400;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s ease;
-}
-
-.download-button:hover {
-  background-color: #444;
-  box-shadow: 0 0 10px #0AC400;
-}
-
-.download-button:disabled {
-  background-color: #333;
-  color: #666;
-  cursor: not-allowed;
-  border-color: #666;
-}
-
-/* Tools container */
-.tools-container {
-  margin-top: 2rem;
-}
-
-/* Responsive adjustments for badge */
+/* Mobile responsiveness */
 @media (max-width: 768px) {
-  .tools-container {
-    overflow-x: auto;
-    padding-bottom: 1rem;
-  }
-  
   .wigle-digital-badge {
-    min-width: auto;
+    min-width: 300px;
+    padding: 0.5rem 0.75rem;
+    margin: 0 auto;
+    width: 95%; /* Ensure some margin on mobile */
   }
-  
+
   .digital-badge-stats-container {
-    grid-template-columns: 1fr;
-  }
-  
-  .digital-badge-header {
-    flex-direction: column;
-  }
-  
-  .digital-badge-user h2 {
-    text-align: center;
-    margin-top: 0.5rem;
-  }
-  
-  .digital-badge-footer {
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row; /* Keep horizontal layout */
     gap: 0.5rem;
+  }
+
+  .digital-badge-stat {
+    padding: 0.25rem 0.4rem;
+  }
+
+  /* Adjust font sizes for mobile */
+  .digital-badge-logo {
+    font-size: 1rem;
+  }
+
+  .digital-badge-user h2 {
+    font-size: 1.4rem;
+  }
+
+  .digital-badge-stat-value {
+    font-size: 1.3rem;
+  }
+
+  .digital-badge-stat-label {
+    font-size: 0.8rem;
+  }
+
+  .digital-badge-stat-icon svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+/* iOS-specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .wigle-digital-badge {
+    /* Prevent iOS Safari issues */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
 }
 
@@ -860,5 +856,24 @@ h2 {
   justify-content: center;
   border-radius: 50%;
   transition: all 0.2s ease;
+}
+
+.wigle-digital-badge.screenshot-mode {
+  background: #121212 !important;
+  background: #121212 !important;   /* dark gray badge background */
+  box-shadow: none !important;
+  border: 1px solid #0AC400 !important;
+  border-radius: 20px !important;
+  margin: 5px;
+  padding: 5px !important;
+}
+.wigle-digital-badge.screenshot-mode .digital-badge-stat-icon svg {
+  display: none !important;
+}
+.wigle-digital-badge.screenshot-mode .digital-badge-stat-icon .emoji-fallback {
+  display: inline !important;
+}
+.digital-badge-stat-icon .emoji-fallback {
+  display: none;
 }
 

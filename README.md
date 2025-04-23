@@ -89,7 +89,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 - Website: [https://forresttindall.dev](https://forresttindall.dev)
 - Project Repository: [https://github.com/forresttindall/WiGLEUploader](https://github.com/forresttindall/WiGLEUploader)
-- Email: [contact@4est.io](mailto:forrest.tindall@gmail.com)
+- Email: [Forrest.tindall@gmail.com](mailto:forrest.tindall@gmail.com)
 
 
 ---

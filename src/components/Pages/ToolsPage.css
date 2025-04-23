@@ -859,13 +859,12 @@ h2 {
 }
 
 .wigle-digital-badge.screenshot-mode {
-  background: #121212 !important;
   background: #121212 !important;   /* dark gray badge background */
   box-shadow: none !important;
-  border: 1px solid #0AC400 !important;
-  border-radius: 20px !important;
-  margin: 5px;
+  border: 2px solid #0AC400 !important;
+  border-radius: 0 !important;      /* Important: force square corners for the screenshot */
   padding: 5px !important;
+  overflow: hidden !important;      /* Prevent any content from spilling out */
 }
 .wigle-digital-badge.screenshot-mode .digital-badge-stat-icon svg {
   display: none !important;

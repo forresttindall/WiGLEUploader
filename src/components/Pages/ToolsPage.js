@@ -22,6 +22,10 @@ function ToolsPage() {
 
   const badgeRef = useRef(null);
 
+  const isMobileDevice = () => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCredentials(prev => {
@@ -155,15 +159,33 @@ function ToolsPage() {
       await document.fonts.ready;
     }
 
-    // Optionally, scroll into view
+    // Scroll into view if needed
     badgeElement.scrollIntoView({ behavior: "auto", block: "center" });
 
-    // Hide SVG icons, show emoji fallback (if you add them in your JSX)
+    // Store original styles
+    const originalBackgroundColor = badgeElement.style.backgroundColor;
+    const originalBorderRadius = badgeElement.style.borderRadius;
+    
+    // Set screenshot mode - add explicit background color and remove border radius
     badgeElement.classList.add('screenshot-mode');
+    badgeElement.style.backgroundColor = '#121212'; // Match your badge background color
+    badgeElement.style.borderRadius = '0'; // Disable border radius for screenshot
+
+    // Special handling for mobile devices
+    if (isMobileDevice()) {
+      // For mobile devices, apply even more aggressive fixes
+      const allElements = badgeElement.querySelectorAll('*');
+      allElements.forEach(el => {
+        if (el.style.borderRadius) {
+          el._originalBorderRadius = el.style.borderRadius;
+          el.style.borderRadius = '0';
+        }
+      });
+    }
 
     try {
       const canvas = await html2canvas(badgeElement, {
-        backgroundColor: null,
+        backgroundColor: '#121212', // Match the badge background color
         useCORS: true,
         scale: 2,
         logging: false,
@@ -172,8 +194,10 @@ function ToolsPage() {
         windowHeight: badgeElement.scrollHeight,
       });
 
-      // Remove screenshot mode
+      // Reset styles and remove screenshot mode
       badgeElement.classList.remove('screenshot-mode');
+      badgeElement.style.backgroundColor = originalBackgroundColor;
+      badgeElement.style.borderRadius = originalBorderRadius;
 
       // Check if running on iOS
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
@@ -266,8 +290,24 @@ function ToolsPage() {
         console.error('Error generating image:', error);
         alert('There was an error generating the image. Please try again.');
       }
+
+      // Don't forget to restore styles for all elements if you modified them
+      if (isMobileDevice()) {
+        const allElements = badgeElement.querySelectorAll('*');
+        allElements.forEach(el => {
+          if (el._originalBorderRadius) {
+            el.style.borderRadius = el._originalBorderRadius;
+            delete el._originalBorderRadius;
+          }
+        });
+      }
     } catch (error) {
+      // Reset styles even if there's an error
       badgeElement.classList.remove('screenshot-mode');
+      badgeElement.style.backgroundColor = originalBackgroundColor;
+      badgeElement.style.borderRadius = originalBorderRadius;
+      
+      console.error('Error generating image:', error);
       alert('There was an error generating the image. Please try again.');
     }
   };

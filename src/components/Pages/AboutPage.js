@@ -16,7 +16,7 @@ function AboutPage() {
         <li>Badge Generator for sharing your WiGLE stats</li>
       </ul>
       <br></br>
-      <h2>Created and maintained by <a href="https://4est.io" target="_blank" rel="noopener noreferrer">4est.io.</a> 
+      <h2>Created and maintained by <a href="https://forresttindall.dev" target="_blank" rel="noopener noreferrer">Forrest Tindall</a> 
       <br></br>
       <br></br>
       Please support the project by <a href="https://account.venmo.com/u/ForrestTindall" target="_blank" rel="noopener noreferrer">donating here.</a></h2>

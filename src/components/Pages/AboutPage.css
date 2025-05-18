@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Kode+Mono:wght@400..700&family=Geist+Mono:wght@100..900&display=swap');
+
+
+.cb-logo {
+    height: 35px;
+    align-items: center;
+    margin: 0px 20px;
+    transform: translateY(10px);
+}
+
+.cb-text {
+    font-family: Kode Mono;
+    text-transform: uppercase;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 20%, #dc2743 40%, #cc2366 60%, #bc1888 80%, #7b3fff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% 100%;
+    animation: gradientShift 8s ease infinite;
+    font-size: 25px;
+    text-decoration: underline;
+}
+.cb-text:hover {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 20%, #dc2743 40%, #cc2366 60%, #bc1888 80%, #7b3fff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% 100%;
+    animation: gradientShift 8s ease infinite;
+    font-family: Kode Mono;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(230, 76, 119, 0.9);
+    font-size: 25px;
+   
+}
+
+@keyframes gradientShift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }

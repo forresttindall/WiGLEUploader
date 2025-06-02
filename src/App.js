@@ -34,7 +34,7 @@ function App() {
     // Load Google Maps API with your key
     const loadGoogleMapsAPI = () => {
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyC39qFGmCOo3FSV2AAYJMoR-OtspiPjkuU&libraries=visualization&callback=initMap&loading=async`;
+      script.src = ``;
       script.async = true;
       script.defer = true;
       

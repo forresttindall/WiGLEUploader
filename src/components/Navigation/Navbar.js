@@ -30,12 +30,12 @@ function Navbar({ activePage, setActivePage }) {
         >
           Stats Generator
         </button>
-        <button 
+        {/*<button 
           className={`nav-button ${activePage === 'route-planner' ? 'active' : ''}`} 
           onClick={() => setActivePage('route-planner')}
         >
           Route Planner
-        </button>
+        </button>*/}
         <button 
           className={`nav-button ${activePage === 'about' ? 'active' : ''}`} 
           onClick={() => setActivePage('about')}

@@ -152,7 +152,15 @@ function ToolsPage() {
   // Update the downloadBadgeImage function
   const downloadBadgeImage = async () => {
     const badgeElement = badgeRef.current;
-    if (!badgeElement) return;
+    if (!badgeElement) {
+      alert('Badge not found. Please try again.');
+      return;
+    }
+
+    // Add user feedback
+    const originalButtonText = document.querySelector('.download-button').textContent;
+    document.querySelector('.download-button').textContent = 'Generating...';
+    document.querySelector('.download-button').disabled = true;
 
     // Wait for web fonts to load
     if (document.fonts && document.fonts.ready) {
@@ -222,95 +230,190 @@ function ToolsPage() {
           // For iOS, use the native share functionality
           canvas.toBlob(async (blob) => {
             try {
-              // Try native share first
-              const file = new File([blob], `wigle-stats-${userData?.userName || 'user'}.png`, { 
-                type: 'image/png',
-                lastModified: new Date().getTime()
-              });
+              // Check if Web Share API is available and supports files
+              if (navigator.share && navigator.canShare) {
+                try {
+                  // Try native share first
+                  const file = new File([blob], `wigle-stats-${userData?.userName || 'user'}.png`, { 
+                    type: 'image/png',
+                    lastModified: new Date().getTime()
+                  });
 
-              if (navigator.share && navigator.canShare({ files: [file] })) {
-                await navigator.share({
-                  files: [file],
-                  title: 'WiGLE Stats Badge',
-                  text: 'Check out my WiGLE statistics!'
-                });
-              } else {
-                // Fallback for older iOS versions
-                const blobUrl = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = blobUrl;
-                link.download = `wigle-stats-${userData?.userName || 'user'}.png`;
-                link.click();
-                setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+                  // Check if files can be shared
+                  if (navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                       files: [file],
+                       title: 'WiGLE Stats Badge',
+                       text: 'Check out my WiGLE statistics!'
+                     });
+                     
+                     // Reset button state on success
+                     const downloadButton = document.querySelector('.download-button');
+                     if (downloadButton) {
+                       downloadButton.textContent = originalButtonText;
+                       downloadButton.disabled = false;
+                     }
+                     return; // Success, exit early
+                  }
+                } catch (shareError) {
+                  console.log('File sharing not supported, trying data URL share:', shareError);
+                  
+                  // Try sharing with data URL instead of file
+                  try {
+                    const dataUrl = canvas.toDataURL('image/png');
+                    await navigator.share({
+                      title: 'WiGLE Stats Badge',
+                      text: 'Check out my WiGLE statistics!',
+                      url: dataUrl
+                    });
+                    return; // Success, exit early
+                  } catch (dataUrlError) {
+                    console.log('Data URL sharing failed:', dataUrlError);
+                  }
+                }
               }
-            } catch (error) {
-              console.error('Error sharing:', error);
-              // Final fallback - open in new window
+              
+              // Fallback: Force download using blob URL
               const blobUrl = URL.createObjectURL(blob);
-              window.open(blobUrl);
-              setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+              const link = document.createElement('a');
+              link.href = blobUrl;
+              link.download = `wigle-stats-${userData?.userName || 'user'}.png`;
+              
+              // For iOS, we need to trigger the download differently
+               document.body.appendChild(link);
+               link.click();
+               document.body.removeChild(link);
+               
+               // Reset button state on successful download
+               const downloadButton = document.querySelector('.download-button');
+               if (downloadButton) {
+                 downloadButton.textContent = originalButtonText;
+                 downloadButton.disabled = false;
+               }
+               
+               setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+              
+            } catch (error) {
+              console.error('Error in iOS download process:', error);
+              // Final fallback - open image in new window for manual save
+              const dataUrl = canvas.toDataURL('image/png');
+              const newWindow = window.open();
+              if (newWindow) {
+                newWindow.document.write(`<img src="${dataUrl}" alt="WiGLE Stats Badge" style="max-width: 100%; height: auto;">`);
+                newWindow.document.write('<p>Long press the image and select "Save to Photos" or "Download Image"</p>');
+              } else {
+                alert('Please allow popups and try again, or use the share button in your browser.');
+              }
             }
           }, 'image/png', 1.0);
         } else {
           // For Android and other devices
           canvas.toBlob(async (blob) => {
             try {
-              // Try native share on Android
-              const file = new File([blob], `wigle-stats-${userData?.userName || 'user'}.png`, { 
-                type: 'image/png',
-                lastModified: new Date().getTime()
-              });
+              // Try native share on Android and other devices
+              if (navigator.share && navigator.canShare) {
+                try {
+                  const file = new File([blob], `wigle-stats-${userData?.userName || 'user'}.png`, { 
+                    type: 'image/png',
+                    lastModified: new Date().getTime()
+                  });
 
-              if (navigator.share && navigator.canShare({ files: [file] })) {
-                await navigator.share({
-                  files: [file],
-                  title: 'WiGLE Stats Badge',
-                  text: 'Check out my WiGLE statistics!'
-                });
-              } else {
-                // Fallback to direct download
-                const blobUrl = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.download = `wigle-stats-${userData?.userName || 'user'}.png`;
-                link.href = blobUrl;
-                link.click();
-                setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+                  if (navigator.canShare({ files: [file] })) {
+                     await navigator.share({
+                       files: [file],
+                       title: 'WiGLE Stats Badge',
+                       text: 'Check out my WiGLE statistics!'
+                     });
+                     
+                     // Reset button state on success
+                     const downloadButton = document.querySelector('.download-button');
+                     if (downloadButton) {
+                       downloadButton.textContent = originalButtonText;
+                       downloadButton.disabled = false;
+                     }
+                     return; // Success, exit early
+                  }
+                } catch (shareError) {
+                  console.log('File sharing not supported on this device:', shareError);
+                }
               }
-            } catch (error) {
-              console.error('Error sharing:', error);
+              
               // Fallback to direct download
+              const blobUrl = URL.createObjectURL(blob);
               const link = document.createElement('a');
               link.download = `wigle-stats-${userData?.userName || 'user'}.png`;
-              link.href = canvas.toDataURL('image/png');
-              link.click();
+              link.href = blobUrl;
+              
+              // Ensure the link is added to DOM for better compatibility
+               document.body.appendChild(link);
+               link.click();
+               document.body.removeChild(link);
+               
+               // Reset button state on successful download
+               const downloadButton = document.querySelector('.download-button');
+               if (downloadButton) {
+                 downloadButton.textContent = originalButtonText;
+                 downloadButton.disabled = false;
+               }
+               
+               setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+              
+            } catch (error) {
+              console.error('Error in download process:', error);
+              // Final fallback using data URL
+              try {
+                const link = document.createElement('a');
+                link.download = `wigle-stats-${userData?.userName || 'user'}.png`;
+                link.href = canvas.toDataURL('image/png');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              } catch (dataUrlError) {
+                console.error('Data URL fallback failed:', dataUrlError);
+                alert('Download failed. Please try again or contact support.');
+              }
             }
           }, 'image/png', 1.0);
         }
       } catch (error) {
         console.error('Error generating image:', error);
-        alert('There was an error generating the image. Please try again.');
-      }
-
-      // Don't forget to restore styles for all elements if you modified them
-      if (isMobileDevice()) {
-        const allElements = badgeElement.querySelectorAll('*');
-        allElements.forEach(el => {
-          if (el._originalBorderRadius) {
-            el.style.borderRadius = el._originalBorderRadius;
-            delete el._originalBorderRadius;
-          }
-        });
-      }
-    } catch (error) {
-      // Reset styles even if there's an error
-      badgeElement.classList.remove('screenshot-mode');
-      badgeElement.style.backgroundColor = originalBackgroundColor;
-      badgeElement.style.borderRadius = originalBorderRadius;
-      
-      console.error('Error generating image:', error);
       alert('There was an error generating the image. Please try again.');
     }
-  };
+
+    // Don't forget to restore styles for all elements if you modified them
+    if (isMobileDevice()) {
+      const allElements = badgeElement.querySelectorAll('*');
+      allElements.forEach(el => {
+        if (el._originalBorderRadius) {
+          el.style.borderRadius = el._originalBorderRadius;
+          delete el._originalBorderRadius;
+        }
+      });
+    }
+
+    // Reset button state
+    const downloadButton = document.querySelector('.download-button');
+    if (downloadButton) {
+      downloadButton.textContent = originalButtonText;
+      downloadButton.disabled = false;
+    }
+  } catch (error) {
+    // Reset styles even if there's an error
+    badgeElement.classList.remove('screenshot-mode');
+    badgeElement.style.backgroundColor = originalBackgroundColor;
+    badgeElement.style.borderRadius = originalBorderRadius;
+    
+    // Reset button state
+    const downloadButton = document.querySelector('.download-button');
+    if (downloadButton) {
+      downloadButton.textContent = originalButtonText;
+      downloadButton.disabled = false;
+    }
+    
+    console.error('Error generating image:', error);
+    alert('There was an error generating the image. Please try again.');
+  }
+};
 
   return (
     <div className="tools-page">

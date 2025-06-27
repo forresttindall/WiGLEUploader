@@ -4,27 +4,18 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-// Add Geist Mono font
-const fontLink = document.createElement('link');
-fontLink.href = 'https://fonts.googleapis.com/css2?family=Space+Mono&display=swap';
-fontLink.rel = 'stylesheet';
-document.head.appendChild(fontLink);
-
-// Try to load Geist Mono if available (it's not on Google Fonts)
-const geistFontStyle = document.createElement('style');
-geistFontStyle.textContent = `
-  @font-face {
-    font-family: 'Geist Mono';
-    src: url('https://cdn.jsdelivr.net/npm/geist-font@latest/fonts/geist-mono/GeistMono-Regular.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
+// Ensure DM Sans font is applied globally
+const globalFontStyle = document.createElement('style');
+globalFontStyle.textContent = `
+  * {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   }
   
   body {
-    font-family: 'Geist Mono', 'Space Mono', monospace;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   }
 `;
-document.head.appendChild(geistFontStyle);
+document.head.appendChild(globalFontStyle);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

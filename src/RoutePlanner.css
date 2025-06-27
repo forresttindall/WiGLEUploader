@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap');
 
 html {
-  font-family: 'Kode Mono', 'Space Mono', monospace;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .route-planner {
@@ -237,13 +237,12 @@ html {
 .visualization-control button,
 .fetch-button, .download-button {
   /* Only change appearance, not layout */
-  font-family: "Kode Mono", monospace !important;
+  font-family: inherit !important;
   text-transform: uppercase !important;
   font-size: 0.9rem !important;
-  color: #909090 !important;
-  background: rgba(30, 30, 30, 0.8) !important;
-  backdrop-filter: blur(10px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--text-color) !important;
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
   border-radius: 10px !important;
   box-shadow: 0 5px 40px rgba(101, 93, 255, 0.15) !important;
   transition: 1s ease all !important;
@@ -262,9 +261,9 @@ html {
   color: white !important;
   background: rgba(35, 35, 35, 0.9) !important;
   backdrop-filter: blur(10px) !important;
-  box-shadow: 0 0 10px #0AC400 !important;
+  box-shadow: var(--shadow-md) !important;
   cursor: pointer !important;
-  border: solid 1px #0AC400 !important;
+  border: solid 1px var(--primary-color) !important;
   border-radius: 10px !important;
   /* Remove gradient background */
   background-image: none !important;
@@ -290,13 +289,11 @@ html {
   display: inline-block !important;
   width: 16px !important;
   height: 16px !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230AC400'%3E%3Cpath d='M12 0L14.82 9.18L24 12L14.82 14.82L12 24L9.18 14.82L0 12L9.18 9.18z'/%3E%3C/svg%3E") !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310b981'%3E%3Cpath d='M12 0L14.82 9.18L24 12L14.82 14.82L12 24L9.18 14.82L0 12L9.18 9.18z'/%3E%3C/svg%3E") !important;
   background-size: contain !important;
   background-repeat: no-repeat !important;
   background-position: center !important;
-  filter: drop-shadow(0 0 5px rgba(10, 196, 0, 0.7))
-         drop-shadow(0 0 10px rgba(10, 196, 0, 0.5))
-         drop-shadow(0 0 20px rgba(10, 196, 0, 0.3)) !important;
+  filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.4)) !important;
   margin-right: 5px !important;
 }
 
@@ -304,8 +301,8 @@ html {
 .visualization-control button.active {
   background: rgba(35, 35, 35, 0.9) !important;
   color: white !important;
-  border: solid 1px #0AC400 !important;
-  box-shadow: 0 0 10px #0AC400 !important;
+  border: solid 1px var(--primary-color) !important;
+  box-shadow: var(--shadow-md) !important;
 }
 
 /* Restore original button positioning */
@@ -381,12 +378,12 @@ html {
 
 .my-location-button:hover {
   background: rgba(35, 35, 35, 0.95) !important;
-  border-color: #0AC400 !important;
-  box-shadow: 0 0 10px #0AC400 !important;
+  border-color: var(--primary-color) !important;
+box-shadow: var(--shadow-md) !important;
 }
 
 .my-location-button svg {
-  stroke: #0AC400;
+  stroke: var(--primary-color);
 }
 
 /* Location messages */
@@ -431,19 +428,19 @@ html {
 
 .fetch-data-button {
   background: rgba(18, 18, 18, 0.9) !important;
-  border: 1px solid rgba(10, 196, 0, 0.3) !important;
+  border: 1px solid var(--border-color) !important;
   border-radius: 8px !important;
   padding: 8px 16px !important;
   margin: 10px !important;
   color: white !important;
   cursor: pointer !important;
-  font-family: 'Kode Mono', 'Space Mono', monospace !important;
+  font-family: inherit !important;
   transition: all 0.3s ease !important;
 }
 
 .fetch-data-button:hover {
   background: rgba(25, 25, 25, 0.95) !important;
-  border-color: #0AC400 !important;
-  box-shadow: 0 0 10px rgba(10, 196, 0, 0.5) !important;
+  border-color: var(--primary-color) !important;
+box-shadow: var(--shadow-md) !important;
   transform: scale(1.05) !important;
 }

@@ -11,7 +11,7 @@ function Navbar({ activePage, setActivePage }) {
             <FontAwesomeIcon 
               icon={faWifi} 
               className="wifi-icon-pulse" 
-              style={{ color: '#0AC400' }} 
+              style={{ color: 'var(--primary-color)' }} 
             />
           </div>
           <span className="site-title">WiGLE Uploader</span>
@@ -53,4 +53,4 @@ function Navbar({ activePage, setActivePage }) {
   );
 }
 
-export default Navbar; 
+export default Navbar;

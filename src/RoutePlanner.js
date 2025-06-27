@@ -348,7 +348,7 @@ function RoutePlanner() {
             icon: {
               path: window.google.maps.SymbolPath.CIRCLE,
               scale: 8,
-              fillColor: '#0AC400',
+              fillColor: '#10b981',
               fillOpacity: 1,
               strokeColor: '#FFFFFF',
               strokeWeight: 2
@@ -366,9 +366,9 @@ function RoutePlanner() {
             map: map,
             center: userLocation,
             radius: position.coords.accuracy,
-            fillColor: '#0AC400',
+            fillColor: '#10b981',
             fillOpacity: 0.1,
-            strokeColor: '#0AC400',
+            strokeColor: '#10b981',
             strokeOpacity: 0.3,
             strokeWeight: 1
           });

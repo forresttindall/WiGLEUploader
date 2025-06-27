@@ -210,7 +210,7 @@ function ToolsPage() {
         if (userName) {
           userName.style.background = 'none';
           userName.style.webkitBackgroundClip = 'initial';
-          userName.style.webkitTextFillColor = '#0AC400';
+          userName.style.webkitTextFillColor = '#10b981';
         }
 
         // Restore original style
@@ -375,7 +375,7 @@ function ToolsPage() {
             <div className="digital-badge-header">
               <div className="digital-badge-logo">
                 <FontAwesomeIcon icon={faWifi} className="wifi-icon-large" />
-                <span>WiGLE.net</span>
+                <span>wigleuploader.net</span>
               </div>
               <div className="digital-badge-user">
                 <h2>{userData?.userName || 'WiGLE User'}</h2>
@@ -461,4 +461,4 @@ function ToolsPage() {
   );
 }
 
-export default ToolsPage; 
+export default ToolsPage;

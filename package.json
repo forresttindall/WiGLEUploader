@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^13.5.0",
     "chart.js": "^4.4.8",
     "html2canvas": "^1.4.1",
+    "lucide-react": "^0.523.0",
     "phosphor-react": "^1.4.1",
     "react": "^19.0.0",
     "react-chartjs-2": "^5.3.0",

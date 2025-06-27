@@ -25,9 +25,23 @@ function App() {
   useEffect(() => {
     const savedCredentials = localStorage.getItem('credentials');
     if (savedCredentials) {
-      setCredentials(JSON.parse(savedCredentials));
+      const parsed = JSON.parse(savedCredentials);
+      console.log('Loading saved credentials:', parsed);
+      setCredentials(parsed);
     }
   }, []);
+
+  // Save credentials to localStorage when rememberMe is enabled
+  useEffect(() => {
+    console.log('Credentials changed:', credentials);
+    if (credentials.rememberMe) {
+      console.log('Saving credentials to localStorage');
+      localStorage.setItem('credentials', JSON.stringify(credentials));
+    } else {
+      console.log('Removing credentials from localStorage');
+      localStorage.removeItem('credentials');
+    }
+  }, [credentials]);
 
   // Add this useEffect to load Google Maps API properly
   useEffect(() => {
@@ -56,6 +70,8 @@ function App() {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     const inputValue = type === 'checkbox' ? checked : value;
+    
+    console.log('Input change:', { name, value, type, checked, inputValue });
     
     setCredentials(prev => ({
       ...prev,

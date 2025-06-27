@@ -6,7 +6,12 @@ function AboutPage() {
   return (
     <div className="about-page">
       {/* Hero Section */}
-  
+      <section className="hero-section">
+        <div className="hero-content">
+          <h1 className="hero-title">About WiGLE Uploader</h1>
+         
+        </div>
+      </section>
 
       {/* Features Section */}
       <section className="features-section">

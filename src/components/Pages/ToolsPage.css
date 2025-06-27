@@ -801,11 +801,12 @@ h2 {
   }
 
   .digital-badge-stat-value {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
   }
 
   .digital-badge-stat-label {
-    font-size: 0.8rem;
+    font-size: 0.65rem;
+    white-space: nowrap;
   }
 
   .digital-badge-stat-icon svg {
@@ -860,7 +861,7 @@ h2 {
 .wigle-digital-badge.screenshot-mode {
   background: #121212 !important;   /* dark gray badge background */
   box-shadow: none !important;
-  border: 2px solid var(--primary-color) !important;
+  border: none !important;
   border-radius: 0 !important;      /* Important: force square corners for the screenshot */
   padding: 5px !important;
   overflow: hidden !important;      /* Prevent any content from spilling out */
@@ -870,6 +871,13 @@ h2 {
 }
 .wigle-digital-badge.screenshot-mode .digital-badge-stat-icon .emoji-fallback {
   display: inline !important;
+}
+.wigle-digital-badge.screenshot-mode .digital-badge-stat-label {
+  font-size: 0.65rem !important;
+  white-space: nowrap !important;
+}
+.wigle-digital-badge.screenshot-mode .digital-badge-stat-value {
+  font-size: 1.1rem !important;
 }
 .digital-badge-stat-icon .emoji-fallback {
   display: none;
